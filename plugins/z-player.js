@@ -17,8 +17,8 @@ const axios = require("axios");
 
 // Video Download Command here
 cmd({
-  pattern: "videopro",
-  alias: ["ytvidpro", "ytvpro", 'ytvideopro'],
+  pattern: "videopro262727282",
+  alias: ["ytvidpro😹6😹61", "ytvp35272ro", 'ytvideo162626pro'],
   react: '🚀',
   desc: "Download videos from YouTube by searching for keywords.",
   category: "video",
@@ -65,8 +65,8 @@ cmd({
 // Audio Download Command here
 
 cmd({
-pattern: "playpro",
-alias: ["ytapro", "ytplaypro"],
+pattern: "playdjdjdpro",
+alias: ["ytaprrjfnfo", "ytplaypfnfndro"],
 react: '🪄',
 desc: "Download audio from YouTube by searching for keywords.",
 category: "music",
