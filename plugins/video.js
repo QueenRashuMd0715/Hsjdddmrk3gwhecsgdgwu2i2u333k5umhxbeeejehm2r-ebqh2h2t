@@ -7,6 +7,7 @@ const { fetchJson } = require('../lib/functions');
 
 cmd({
   pattern: 'video',
+  react: '🎥',
   desc: 'Search and download YouTube videos',
   category: 'media',
   filename: __filename
