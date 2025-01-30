@@ -1,57 +1,61 @@
-const config = require('../config');
-const { cmd } = require('../command');
-const { ytsearch, ytmp3, ytmp4 } = require('@dark-yasiya/yt-dl.js'); 
 
-// video2
+const axios = require('axios');
+const yts = require('yt-search');
+const config = require('../config');
+const { cmd, commands } = require('../command');
+const { fetchJson } = require('../lib/functions');
 
 cmd({
-    pattern: "video",
-    alias: ["video2", "ytvideo", "ytdl"],
-    react: "🎥",
-    desc: "Download YouTube video with selectable quality",
-    category: "main",
-    use: '.play4 <Yt url or Name>',
-    filename: __filename
-},
-async (conn, mek, m, { from, prefix, quoted, q, reply, waitForReply }) => {
-    try {
-        if (!q) return await reply("Please provide a YouTube URL or Name");
+  pattern: 'video',
+  desc: 'Search and download YouTube videos',
+  category: 'media',
+  filename: __filename
+}, async (conn, mek, m, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
+  try {
+    if (!q) return reply(`*Example*: .video ප්‍රේමායුධ Song`);
 
-        const yt = await ytsearch(q);
-        if (yt.results.length < 1) return reply("No results found!");
+    const searchResults = await yts(q);
+    const video = searchResults.all[0];
 
-        let yts = yt.results[0];
+    if (!video) return reply(`*No video found for ${q}*`);
 
-        let ytmsg = `╭━━━〔 *𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃* 〕━━━╮
+    const apiUrl = `https://api.davidcyriltech.my.id/download/ytmp4`;
+    const apiResponse = await axios.get(apiUrl, { params: { url: video.url } });
 
-* *ʋιԃҽσ ԃαɯɳʅσαԃιɳɠ 🎥*
+    if (apiResponse.data.success) {
+      const { title, download_url } = apiResponse.data.result;
 
-╰──────────────────────╯
-╭━┉┉┉┉┉┉┉┉┉┉┉┉━❐━⪼
-┇๏ *𝑻𝒊𝒕𝒍𝒆* -  _${yts.title}_
-┇๏ *𝑫𝒖𝒓𝒂𝒕𝒊𝒐𝒏* - _${yts.timestamp}_
-┇๏ *𝑽𝒊𝒆𝒘𝒔* -  _${yts.views}_
-┇๏ *𝑨𝒖𝒕𝒉𝒐𝒓* -  _${yts.author.name}_
-┇๏ *𝑳𝒊𝒏𝒌* -  _${yts.url}_
-╰━┉┉┉┉┉┉┉┉┉┉┉┉━❑━⪼
+      await reply(`*╭╼╼╼ ● 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ● ╼╼╼╮*\n\n* *QUEEN RASHU MD VIDEO DAWNLODER 🎥*\n\n*╭╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*\n*│* Song Name : ${title}\n*│* Duration : ${video.timestemp}\n*╰╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*\n\n* *Auto Sending Your Seaching Video👇*\n\n*✵ ╼╼╼╼╼( ʀᴀꜱʜᴜ )╼╼╼╼╼ ✵*\n\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`);
 
-> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*`;
-
-        // Send video details
-        await conn.sendMessage(from, { image: { url: yts.thumbnail || yts.image || '' }, caption: `${ytmsg}` }, { quoted: mek });
-
-        let quality = "360p"; // Directly set quality to 360p
-        const ytdl = await ytmp4(yts.url, quality);
-        if (!ytdl.download.url) return reply("Failed to get the download link!");
-
-        // Send video file
-        await conn.sendMessage(from, {
-            video: { url: ytdl.download.url },
-            mimetype: "video/mp4",
-            caption: `> *${yts.title}*\n> *Quality: ${quality}*\n\n\n> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*`
-        }, { quoted: mek });
-    } catch (e) {
-        console.log(e);
-        reply(e.message || "An error occurred!");
+      await conn.sendMessage(m.chat, { video: { url: download_url }, mimetype: 'video/mp4', caption: `📹 *${title}*\n\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*` }, { quoted: m });
+    } else {
+      reply(`*Error downloading video! Please try again later.*`);
     }
+  } catch (error) {
+    console.error('Error during video command:', error);
+    reply(`*An error occurred while processing your request.*`);
+  }
 });
