@@ -15,7 +15,7 @@ const config = require("../config");
 
 cmd(
   {
-    pattern: 'vsticker',
+    pattern: 'vdbhsticker',
     react: '🥸',
     alias: ['gsticker', 'vidoesticker', 'gs', 'v2s', 'vs',],
     desc: 'Convert GIF/Video to a sticker.',
