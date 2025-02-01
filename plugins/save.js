@@ -1,92 +1,48 @@
-const {cmd , commands} = require('../command')
-const fg = require('api-dylux')
-const yts = require('yt-search')
+const axios = require('axios');
+const { cmd } = require('../command');
 
 cmd({
-    pattern: "song00",
-    desc: "download songs",
+    pattern: "song5",
+    desc: "Download a specific song using the David Cyril Tech API",
     category: "download",
+    use: ".song5 <YouTube URL>",
     react: "🎵",
     filename: __filename
 },
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("*කරුණාකර Link එකක් හො නමක් ලබා දෙන්න 🔎...*")
-const search = await yts(q)
-const data = search.videos[0]
-const url = data.url
+async (conn, mek, m, { from, q, reply }) => {
+    try {
+        if (!q) return reply(`Please provide a YouTube URL.`);
 
-let desc = `*◆ NETHU-MD SONG DOWNLOADER ◆*
+        const apiUrl = `https://api.davidcyriltech.my.id/download/ytmp3?url=${encodeURIComponent(q)}`;
+        const response = await axios.get(apiUrl);
+        const data = response.data;
 
-| ➤ TITLE - ${data.title}
+        if (!data.success) return reply("❌ Failed to fetch song details!");
 
-| ➤ VIEWS - ${data.views}
+        const songDetails = data.result;
+        const songMsg = `*乂 THENU-MD SONG DOWNLOADER ◉◉►
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓        
+*📜 TITLE*: ➥ ${songDetails.title}\n
+*📷 THUMBNAIL*: ➥ ${songDetails.thumbnail}\n
+*🔊 QUALITY*: ➥ ${songDetails.quality}
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+*乂◉◉► SENDING AUDIO FILE...*`;
 
-| ➤ DESCRIPTION - ${data.description}
+        await conn.sendMessage(from, {
+                               
+            image: { url: songDetails.thumbnail },
+            caption: songMsg, },{quoted: mek });
 
-| ➤ TIME - ${data.timestamp}
+        // Send the audio file directly
+        await conn.sendMessage(from, {
+            audio: { url: songDetails.download_url },
+            mimetype: "audio/mpeg",
+            caption: "Here is your audio file!",
+        }, { quoted: mek });
 
-|➤ AGO - ${data.ago}
-
- ©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴜ ᴍᴀx
-`
-await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
-
-//download audio
-
-let down = await fg.yta(url)  
-let downloadUrl = down.dl_url
-
-//send audio
-await conn.sendMessage(from,{audio:{url: downloadUrl},mimetype:"audio/mpeg"},{quoted:mek})
-await conn.sendMessage(from,{document:{url: downloadUrl},mimetype:"audio/mpeg",fileName:data.title + "mp3",caption:"©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴜ ᴍᴀx"},{quoted:mek})
-}catch(e){
-reply(`${e}`)
-}
-})
-
-//===========video-dl===========
-
-cmd({
-    pattern: "video00",
-    desc: "download video",
-    category: "download",
-    react: "🎥",
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("*කරුණාකර Link එකක් හො නමක් ලබා දෙන්න 🔎...*")
-const search = await yts(q)
-const data = search.videos[0]
-const url = data.url
-
-let des = `*◆ NETHU-MD VIDEO DOWNLOADER ◆*
-
-| ➤ TITLE - ${data.title}
-
-| ➤ VIEWS - ${data.views}
-
-| ➤ DESCRIPTION - ${data.description}
-
-| ➤ TIME - ${data.timestamp}
-
-| ➤ AGO - ${data.ago}
-
-©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴜ ᴍᴀx
-`
-await conn.sendMessage(from,{image:{url: data.thumbnail},caption:des},{quoted:mek});
-
-//download video
-
-let down = await fg.ytv(url)  
-let downloadUrl = down.dl_url
-
-//send video
-await conn.sendMessage(from,{video:{url: downloadUrl},mimetype:"video/mp4"},{quoted:mek})
-await conn.sendMessage(from,{document:{url: downloadUrl},mimetype:"video/mp4",fileName:data.title + "mp4",caption:"©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴜ ᴍᴀx"},{quoted:mek})
-    
-}catch(a){
-reply(`${a}`)
-}
-})
+    } catch (e) {
+        console.log(e);
+        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
+        reply(`${e}`);
+    }
+});
