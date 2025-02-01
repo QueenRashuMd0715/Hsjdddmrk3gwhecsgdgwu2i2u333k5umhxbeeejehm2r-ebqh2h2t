@@ -1,80 +1,149 @@
-//Code එක Share නෙවෙයි මොනාකරත් කමක් නෑ Credit එකක් දෙන්න අමතක කරන්න එපා Friends.🌝
- 
-const axios = require('axios');
-const { BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, generateWAMessageContent, generateWAMessage, prepareWAMessageMedia, downloadContentFromMessage, areJidsSameUser, getContentType } = require('@whiskeysockets/baileys')
-const { cmd, commands } = require('../command')
-const config = require("../config")
-const { updateEnv, readEnv } = require('../lib/database');
+const config = require('../config');
+const { cmd, commands } = require('../command');
+const os = require("os");
+const { runtime } = require('../lib/functions');
 
 cmd({
-    pattern: "alive00",
-    alias: ["info2"],
-    desc: "Chacke Bot Online or No.",
-    react: "👋",
-    category: "main",
-    filename: __filename
-},
-async(conn, mek, m, {from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try {
-    if (!isOwner) return reply("*This command is only for bot owner!*");
+  pattern: "alive3",
+  desc: "alive",
+  react: '📚',
+  filename: __filename
+}, async (bot, message, args, options) => {
+  const { from, quoted, reply, pushname } = options;
 
-    const currentConfig = await readEnv();
+  try {
 
-    async function createImage(url) {
-        const { imageMessage } = await generateWAMessageContent({
-            image: { url }
-        }, {
-            upload: conn.waUploadToServer
-        });
-        return imageMessage;
-    }
-
-    let settingsDetails = [];
+    const menuText = `*👋 Hello ${pushname}*
     
-    settingsDetails.push({
-        body: proto.Message.InteractiveMessage.Body.fromObject({
-            text: `💚 *I am QUEEN NETHU MD WA Bot* 💚\n\nButton Command තාම හදන ගමන් පුලුවන් ඉක්මනින් දෙන්නම්🤭☺️`
-        }),
-        footer: proto.Message.InteractiveMessage.Footer.fromObject({
-            text: config.FOOTER
-        }),
-        header: proto.Message.InteractiveMessage.Header.fromObject({
-            title: `👋 Hello ${pushname}, I am alive now`,
-            hasMediaAttachment: true,
-            imageMessage: await createImage('https://files.catbox.moe/869fxv.jpg') // Replace with your image
-        }),
-        nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
-            buttons: [
-                {
-                    "name": "cta_url",
-                    "buttonParamsJson": JSON.stringify({
-                        "display_text": "SUPPORT YOUTUBE",
-                        "url": "https://www.youtube.com/@SlNethuMax",
-                    })
-                },
-                {
-                    "name": "cta_url",
-                    "buttonParamsJson": JSON.stringify({
-                        "display_text": "SUPPORT WHATSAPP",
-                        "url": "https://whatsapp.com/channel/0029VagCogPGufJ3kZWjsW3A",
-                    })
-                },
-                {
-                    "name": "cta_url",
-                    "buttonParamsJson": JSON.stringify({
-                        "display_text": "SUPPORT GITHUB",
-                        "url": "https://github.com",
-                    })
-                }
-            ]
-        })
-    });
-      
-                } catch(e) {
-                    console.log(e)
-                    reply(`An error occurred: ${e}`)
-                }
-                });
+     *꧁ྀི*𝐐𝐔𝚵𝚵𝐍 𝐑𝚫𝐒𝐇𝐔 𝐌𝐃*ྀི꧂*
+*♡︎•━━━━━━☻︎━━━━━━•♡︎*
+*𝑹𝒖𝒏𝑻𝒊𝒎𝒆 :* _${runtime(process.uptime())}_
+*𝑹𝒂𝒎 𝑻𝒊𝒎𝒆 :* _${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB_
+*𝑩𝒐𝒕 𝑵𝒂𝒎𝒆 :* _𝐐𝐔𝚵𝚵𝐍 𝐑𝚫𝐒𝐇𝐔 𝐌𝐃_
+*𝑶𝒘𝒏𝒆𝒓 :* _CYBER RUSH MODZ ( Nipun Harshana )_
+* 𝑹𝒆𝒑𝒐 :* _https://github.com/NipunHarshana1119/QUEEN-RASHU-MD-V1_
 
-> *_Created by_* 👨🏼‍💻 :- *_Sl Nethu Max Yt_*
-> Thenux-AI
+*♡︎•━━━━━━☻︎━━━━━━•♡︎*
+*╭╼╼╼╼╼╼╼╼╼╼*
+*├➤ 1  • ʙᴏᴛ ꜱᴘᴇᴇᴅ*
+*├➤ 2  • repo*
+*╰╼╼╼╼╼╼╼╼╼╼*
+
+> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*`;
+
+    // Send Menu Message
+ const sentMenuMessage = await bot.sendMessage(
+  from,
+  {
+    image: { url: "https://i.ibb.co/BsjkCDP/9555.jpg" },
+    caption: menuText,
+    contextInfo: {
+      mentionedJid: [],
+      isForwarded: true,
+      forwardingScore: 1,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: "120363368882758119@newsletter",
+        newsletterName: "ꪶ𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃ꫂ",
+        serverMessageId: 999,
+      },
+    },
+  },
+  { quoted: message }
+);
+
+    const menuMessageId = sentMenuMessage.key.id;
+
+    // Define responses for each option
+    const menuResponses = {
+      '1': { imageCaption: `*𝐐𝐔𝚵𝚵𝐍 𝐑𝚫𝐒𝐇𝐔 𝐌𝐃 𝐒𝐏𝐄𝐄𝐃 : ${ping}ms*
+      
+      > *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*` },
+
+      '2': { imageCaption: 
+`*╭┉┉※𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐈𝐍𝐅𝐎※┉┉╮*
+
+*☬ ʋҽɾƚισɳ              :* _v0.1_
+*☬ ԃҽʋҽʅσρҽɾ        :* _Nipun Harshana_
+*☬ ɾҽρσ υʂҽɾɳαɱҽ :* _NipunHarshana0_
+
+*╭┉┉┉┉┉┉┉┉※ 𝐋𝐈𝐍𝐊𝐒 ※┉┉┉┉┉┉┉┉╮*
+
+* *𝑩𝑶𝑻 𝑮𝑰𝑻𝑯𝑼𝑩*
+> https://github.com/NipunHarshana0/QUEEN-RASHU-MD-V1
+* *𝑾𝑯𝑨𝑻𝑺𝑨𝑷𝑷 𝑮𝑹𝑶𝑼𝑷*
+> https://chat.whatsapp.com/LmfWnYTjh605xVz5J1tgnq
+* *𝑶𝑾𝑵𝑬𝑹 𝑪𝑶𝑵𝑻𝑨𝑪𝑻*
+> wa.me/94727319036
+* *𝒀𝑶𝑼𝑻𝑼𝑩𝑬 𝑪𝑯𝑨𝑵𝑵𝑬𝑳*
+> https://youtube.com/@rashumodz_0715?si=5pg_wumwy6VzizMP
+
+> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*` },
+
+      '6262771818': { imageCaption: 
+`> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*` },
+
+      'eydjs4': { imageCaption: 
+`> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*` },
+
+      '63y3jdj': { imageCaption: 
+`> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*` },
+
+      'rydudh6': { imageCaption: 
+`> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*` },
+
+      'fufjfj7': { imageCaption: 
+`> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*` },
+
+      'fjdjdndndjdh8': { imageCaption: 
+`> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*` },
+
+      '9dhdh': { imageCaption: 
+`> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*` },
+
+      '1xndndbdb0': { imageCaption: 
+`> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*` },
+    };
+
+    // Listen for replies to the menu message
+    bot.ev.on("messages.upsert", async event => {
+      const newMessage = event.messages[0];
+      if (!newMessage.message) return;
+
+      const userReply = newMessage.message.conversation || newMessage.message.extendedTextMessage?.text;
+      const isReplyToMenu = newMessage.message.extendedTextMessage?.contextInfo?.stanzaId === menuMessageId;
+
+if (isReplyToMenu) {
+  const response = menuResponses[userReply];
+  if (response) {
+    // Send image response
+    await bot.sendMessage(
+  from,
+  {
+    image: { url: "https://i.ibb.co/BsjkCDP/9555.jpg" },
+    caption: response.imageCaption,
+    contextInfo: {
+      mentionedJid: [],
+      isForwarded: true,
+      forwardingScore: 1,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: "120363368882758119@newsletter",
+        newsletterName: "ꪶ𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃ꫂ",
+        serverMessageId: 999,
+      },
+    },
+  },
+  { quoted: newMessage }
+);
+  } else {
+    // Handle invalid input
+    await bot.sendMessage(from, {
+      text: "*පිස්සෙක් වෙන්නෙ නැතුව තියෙන Number දෙක විතරක් Type කරන්න 😒💗*"
+    }, { quoted: newMessage });
+  }
+}
+    });
+  } catch (error) {
+    console.error(error);
+    reply(`Error: ${error.message}`);
+  }
+});
