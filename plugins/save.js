@@ -59,69 +59,13 @@ try {
         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
             buttons: [
                 {
-                    "name": "single_select",
+                "name": "cta_url",
                     "buttonParamsJson": JSON.stringify({
-                        "title": "Bot Configuration",
-                        "sections": [
-                            {
-                                "title": "Bot Mode Settings",
-                                "rows": [
-                                    {
-                                        "header": "🌐 Work Mode",
-                                        "title": `.update MODE:public`,
-                                        "id": "mode_settings"
-                                    }
-                                ]
-                            },
-                            {
-                                "title": "Auto Features",
-                                "rows": [
-                                    {
-                                        "header": "🎙️ Auto Voice",
-                                        "title": `Status: ${currentConfig.AUTO_VOICE === 'true' ? 'ON' : 'OFF'}`,
-                                        "description": "Toggle automatic voice messages",
-                                        "id": "auto_voice"
-                                    },
-                                    {
-                                        "header": "🖼️ Auto Sticker",
-                                        "title": `Status: ${currentConfig.AUTO_STICKER === 'true' ? 'ON' : 'OFF'}`,
-                                        "description": "Toggle automatic sticker creation",
-                                        "id": "auto_sticker"
-                                    },
-                                    {
-                                        "header": "💬 Auto Reply",
-                                        "title": `Status: ${currentConfig.AUTO_REPLY === 'true' ? 'ON' : 'OFF'}`,
-                                        "description": "Toggle automatic responses",
-                                        "id": "auto_reply"
-                                    }
-                                ]
-                            },
-                            {
-                                "title": "Notification Settings",
-                                "rows": [
-                                    {
-                                        "header": "👀 Auto Read Status",
-                                        "title": `Status: ${currentConfig.AUTO_READ_STATUS === 'true' ? 'ON' : 'OFF'}`,
-                                        "description": "Toggle automatic status reading",
-                                        "id": "auto_read"
-                                    },
-                                    {
-                                        "header": "😊 Auto React",
-                                        "title": `Status: ${currentConfig.AUTO_REACT === 'true' ? 'ON' : 'OFF'}`,
-                                        "description": "Toggle automatic reactions",
-                                        "id": "auto_react"
-                                    }
-                                ]
-                            }
-                        ]
+                        "display_text": "OWNER",
+                        "url": "https://wa.me/94727319036",
+                        "merchant_url": "https://wa.me/94727319036"
                     })
                 },
-                {
-                    "name": "quick_reply",
-                    "buttonParamsJson": JSON.stringify({
-                        "display_text": ".SPEED",
-                        "id": ".alive"
-                    })
                 },
                 {
                     "name": "cta_url",
@@ -131,27 +75,7 @@ try {
                         "merchant_url": "https://wa.me/94727319036"
                     })
                 },
-                {
-                    "name": "quick_reply",
-                    "buttonParamsJson": JSON.stringify({
-                        "display_text": ".MENU",
-                        "id": ".menu"
-                    })
-                },
-                {
-                    "name": "quick_reply",
-                    "buttonParamsJson": JSON.stringify({
-                        "display_text": ".ALIVE",
-                        "id": ".alive"
-                    })
-                },
-                {
-                    "name": "quick_reply",
-                    "buttonParamsJson": JSON.stringify({
-                        "display_text": ".REPO",
-                        "id": ".repo"
-                    })
-                }
+                })
             ]
         })
     });
