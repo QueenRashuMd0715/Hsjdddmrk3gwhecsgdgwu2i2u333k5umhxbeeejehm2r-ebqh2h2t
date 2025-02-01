@@ -1,10 +1,3 @@
-//queen rashu md
-
- Ubale Siya.....*/
-
-
-
-
 const { 
     BufferJSON, 
     WA_DEFAULT_EPHEMERAL, 
@@ -22,10 +15,10 @@ const { updateEnv, readEnv } = require('../lib/database');
 const config = require("../config")
 
 cmd({
-    pattern: "rashu00",
-    alias: ["setting2","s2"],
+    pattern: "alive1",
+    //alias: ["setting2","s2"],
     desc: "Bot Settings Configuration",
-    react: "⚙️",
+    react: "👋",
     category: "owner",
     filename: __filename
 },
@@ -52,13 +45,13 @@ try {
             text: config.FOOTER
         }),
         header: proto.Message.InteractiveMessage.Header.fromObject({
-            title: `Hello ${pushname}!`,
+            title: `👋 Hellow ${pushname}!\n\n*I AM ALIVE NOW*\n\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`,
             hasMediaAttachment: true,
             imageMessage: await createImage('https://i.ibb.co/g98HkMY/8188.jpg') // Replace with your image
         }),
         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
             buttons: [
-              {
+                {
                     "name": "cta_url",
                     "buttonParamsJson": JSON.stringify({
                         "display_text": "OWNER",
@@ -69,7 +62,7 @@ try {
                 {
                     "name": "cta_url",
                     "buttonParamsJson": JSON.stringify({
-                        "display_text": "CHANEL",
+                        "display_text": "CHANN",
                         "url": "https://wa.me/94727319036",
                         "merchant_url": "https://wa.me/94727319036"
                     })
@@ -98,7 +91,7 @@ try {
             message: {
                 interactiveMessage: proto.Message.InteractiveMessage.fromObject({
                     body: proto.Message.InteractiveMessage.Body.create({
-                        text: '*𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃*\n\n*ᡕᠵ᠊ᡃ່࡚ࠢ࠘⸝່ࠡ᠊߯ᡁࠣ࠘᠊᠊ࠢ࠘气亠*'
+                        text: 'Bot Settings Configuration\n\nSelect an option to modify'
                     }),
                     footer: proto.Message.InteractiveMessage.Footer.create({
                         text: config.FOOTER
@@ -117,67 +110,3 @@ try {
     await conn.relayMessage(m.chat, msg.message, {
         messageId: msg.key.id
     });
-
-    // Settings handler
-    const settingsHandler = async (msgUpdate) => {
-        try {
-            const message = msgUpdate.messages[0];
-            
-            if (message.message?.interactiveResponseMessage?.selectedId) {
-                const selectedOption = message.message.interactiveResponseMessage.selectedId;
-
-                const toggleSetting = async (setting) => {
-                    const newValue = currentConfig[setting] === 'true' ? 'false' : 'true';
-                    await updateEnv(setting, newValue);
-                    reply(`✅ ${setting} updated to ${newValue}`);
-                };
-
-                switch(selectedOption) {
-                    case 'mode_settings':
-                        reply(`Current Mode: ${currentConfig.MODE}
-Available Modes:
-1. public
-2. private
-3. groups
-4. inbox
-
-Reply with desired mode.`);
-                        break;
-                    case 'auto_voice':
-                        await toggleSetting('AUTO_VOICE');
-                        break;
-                    case 'auto_sticker':
-                        await toggleSetting('AUTO_STICKER');
-                        break;
-                    case 'auto_reply':
-                        await toggleSetting('AUTO_REPLY');
-                        break;
-                    case 'auto_read':
-                        await toggleSetting('AUTO_READ_STATUS');
-                        break;
-                    case 'auto_react':
-                        await toggleSetting('AUTO_REACT');
-                        break;
-                    case 'reset_all':
-                        reply('Resetting all settings to default...');
-                        // Add your reset logic here
-                        break;
-                }
-
-                              // Remove listener after processing
-                              conn.ev.off('messages.upsert', settingsHandler);
-                            }
-                        } catch (error) {
-                            console.error("Settings Handler Error:", error);
-                            reply(`❌ An error occurred: ${error.message}`);
-                        }
-                    };
-                
-                    // Register the settings handler
-                    conn.ev.on('messages.upsert', settingsHandler);
-                
-                } catch(e) {
-                    console.log(e)
-                    reply(`An error occurred: ${e}`)
-                }
-                })
