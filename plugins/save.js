@@ -1,4 +1,4 @@
-/* Remove Credits....😒💐
+//queen rashu md
 
  Ubale Siya.....*/
 
@@ -58,65 +58,7 @@ try {
         }),
         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
             buttons: [
-                {
-                    "name": "single_select",
-                    "buttonParamsJson": JSON.stringify({
-                        "title": "Bot Configuration",
-                        "sections": [
-                            {
-                                "title": "Bot Mode Settings",
-                                "rows": [
-                                    {
-                                        "header": "🌐 Work Mode",
-                                        "title": `.update MODE:public`,
-                                        "id": "mode_settings"
-                                    }
-                                ]
-                            },
-                            {
-                                "title": "Auto Features",
-                                "rows": [
-                                    {
-                                        "header": "🎙️ Auto Voice",
-                                        "title": `Status: ${currentConfig.AUTO_VOICE === 'true' ? 'ON' : 'OFF'}`,
-                                        "description": "Toggle automatic voice messages",
-                                        "id": "auto_voice"
-                                    },
-                                    {
-                                        "header": "🖼️ Auto Sticker",
-                                        "title": `Status: ${currentConfig.AUTO_STICKER === 'true' ? 'ON' : 'OFF'}`,
-                                        "description": "Toggle automatic sticker creation",
-                                        "id": "auto_sticker"
-                                    },
-                                    {
-                                        "header": "💬 Auto Reply",
-                                        "title": `Status: ${currentConfig.AUTO_REPLY === 'true' ? 'ON' : 'OFF'}`,
-                                        "description": "Toggle automatic responses",
-                                        "id": "auto_reply"
-                                    }
-                                ]
-                            },
-                            {
-                                "title": "Notification Settings",
-                                "rows": [
-                                    {
-                                        "header": "👀 Auto Read Status",
-                                        "title": `Status: ${currentConfig.AUTO_READ_STATUS === 'true' ? 'ON' : 'OFF'}`,
-                                        "description": "Toggle automatic status reading",
-                                        "id": "auto_read"
-                                    },
-                                    {
-                                        "header": "😊 Auto React",
-                                        "title": `Status: ${currentConfig.AUTO_REACT === 'true' ? 'ON' : 'OFF'}`,
-                                        "description": "Toggle automatic reactions",
-                                        "id": "auto_react"
-                                    }
-                                ]
-                            }
-                        ]
-                    })
-                },
-                {
+              {
                     "name": "cta_url",
                     "buttonParamsJson": JSON.stringify({
                         "display_text": "OWNER",
@@ -127,7 +69,7 @@ try {
                 {
                     "name": "cta_url",
                     "buttonParamsJson": JSON.stringify({
-                        "display_text": "CHANN",
+                        "display_text": "CHANEL",
                         "url": "https://wa.me/94727319036",
                         "merchant_url": "https://wa.me/94727319036"
                     })
@@ -143,8 +85,8 @@ try {
                 {
                     "name": "quick_reply",
                     "buttonParamsJson": JSON.stringify({
-                        "display_text": ".MENU",
-                        "id": ".menu"
+                        "display_text": ".REPO",
+                        "id": ".repo"
                     })
                 }
             ]
