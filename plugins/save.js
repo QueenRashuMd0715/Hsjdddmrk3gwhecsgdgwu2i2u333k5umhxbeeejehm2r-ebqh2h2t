@@ -27,7 +27,7 @@ const {cmd , commands} = require('../command')
 cmd({
 pattern: "vv",
     react: "😁",
-    alias: ["mattu","dakkada","mekada","supiri"],
+    alias: ["mattu","dakkada","mekada","supiri","wow","nice"],
     desc: "To ViewOnceMessage",
     category: "convert",
     use: '.vv',
