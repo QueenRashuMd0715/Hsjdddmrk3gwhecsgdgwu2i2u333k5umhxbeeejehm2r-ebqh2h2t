@@ -1255,7 +1255,7 @@ cmd(
 
 cmd({
   pattern: "menu",
-  alias: ["මෙනු", "මෙනූ", 'කමාන්ඩ්'],
+  alias: ["මෙනු", "මෙනූ", 'MENU'],
   desc: "Commands panel",
   react: '📚',
   filename: __filename
