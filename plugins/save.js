@@ -143,8 +143,8 @@ try {
                 {
                     "name": "quick_reply",
                     "buttonParamsJson": JSON.stringify({
-                        "display_text": ".REPO",
-                        "id": ".repo"
+                        "display_text": ".MENU",
+                        "id": ".menu"
                     })
                 }
             ]
