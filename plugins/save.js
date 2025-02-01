@@ -1,3 +1,4 @@
+
 const { 
     BufferJSON, 
     WA_DEFAULT_EPHEMERAL, 
@@ -110,3 +111,10 @@ try {
     await conn.relayMessage(m.chat, msg.message, {
         messageId: msg.key.id
     });
+    conn.ev.on('messages.upsert', settingsHandler);
+                
+                } catch(e) {
+                    console.log(e)
+                    reply(`An error occurred: ${e}`)
+                }
+                })
