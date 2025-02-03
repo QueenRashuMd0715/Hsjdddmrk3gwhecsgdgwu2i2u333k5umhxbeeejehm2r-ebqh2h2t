@@ -73,7 +73,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
                     {
                         "name": "quick_reply",
                         "buttonParamsJson": JSON.stringify({
-                            "display_text": ".REPO",
+                            "display_text": "REPO",
                             "id": ".repo"
                         })
                     }
