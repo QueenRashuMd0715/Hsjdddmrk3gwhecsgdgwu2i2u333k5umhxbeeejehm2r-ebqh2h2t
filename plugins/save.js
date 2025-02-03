@@ -17,7 +17,7 @@ const config = require("../config");
 
 cmd({
     pattern: "alive1",
-    desc: "Bot Settings Configuration",
+    desc: "Bot Online Test",
     react: "👋",
     category: "owner",
     filename: __filename
@@ -59,22 +59,22 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
                     {
                         "name": "cta_url",
                         "buttonParamsJson": JSON.stringify({
-                            "display_text": "CHANN",
-                            "url": "https://wa.me/94727319036"
+                            "display_text": "CHANNEL",
+                            "url": "https://whatsapp.com/channel/0029Vb2GOyk6rsQwJSBa7T2h"
                         })
                     },
                     {
                         "name": "cta_url",
                         "buttonParamsJson": JSON.stringify({
                             "display_text": "YOUTUBE",
-                            "url": "https://wa.me/94727319036"
+                            "url": "https://youtube.com/@rashumodz_0715?si=5pg_wumwy6VzizMP"
                         })
                     },
                     {
-                        "name": "quick_reply",
+                        "name": "cta_url",
                         "buttonParamsJson": JSON.stringify({
                             "display_text": "REPO",
-                            "id": ".repo"
+                            "url": "https://github.com/NipunHarshana0/QUEEN-RASHU-MD-V1"
                         })
                     }
                 ]
@@ -86,7 +86,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
                 message: {
                     interactiveMessage: proto.Message.InteractiveMessage.create({
                         body: proto.Message.InteractiveMessage.Body.create({
-                            text: 'Bot Settings Configuration\n\nSelect an option to modify'
+                            text: '*᮰ 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ᮰*\n\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*'
                         }),
                         footer: proto.Message.InteractiveMessage.Footer.create({
                             text: config.FOOTER
