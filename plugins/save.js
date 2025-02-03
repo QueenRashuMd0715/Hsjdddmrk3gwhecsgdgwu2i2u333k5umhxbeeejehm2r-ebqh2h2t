@@ -16,8 +16,8 @@ const { updateEnv, readEnv } = require('../lib/database');
 const config = require("../config");
 
 cmd({
-    pattern: "alive1",
-    desc: "Bot Online Test",
+    pattern: "ping1",
+    desc: "Bot speed test",
     react: "👋",
     category: "owner",
     filename: __filename
@@ -43,7 +43,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
                 text: config.FOOTER
             }),
             header: proto.Message.InteractiveMessage.Header.create({
-                title: `👋 Hello ${pushname}!\n\n*I AM ALIVE NOW*\n\n> *𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`,
+                title: `*𝐐𝐔𝚵𝚵𝐍 𝐑𝚫𝐒𝐇𝐔 𝐌𝐃 𝐒𝐏𝐄𝐄𝐃 : ${ping}ms*\n\n\n> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*`,
                 hasMediaAttachment: true,
                 imageMessage: await createImage('https://i.ibb.co/g98HkMY/8188.jpg')
             }),
