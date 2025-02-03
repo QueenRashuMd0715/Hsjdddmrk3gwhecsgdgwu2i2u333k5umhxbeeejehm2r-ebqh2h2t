@@ -1,111 +1,53 @@
-/*  SSSSS  U   U  BBBBB   ZZZZZ  EEEEE  RRRRR   OOO      M   M   DDDD  
- S       U   U  B    B     Z   E      R   R  O   O     MM MM   D   D 
-  SSS    U   U  BBBBB     Z    EEEE   RRRRR  O   O     M M M   D   D 
-     S   U   U  B    B   Z     E      R  R   O   O     M   M   D   D 
-  SSSSS   UUU   BBBBB  ZZZZZ  EEEEE  R   R   OOO      M   M   DDDD  
-*/
-
-// Wanna Use My Codes???
-// Give Credits Yah, Mr Frank
+//---- *REPLACE WITH YOUR API KEY* 🤌
 
 
+const axios = require("axios")
 
+const GEMINI_API_KEY = "";  //REPLACE WITH YOUR API KEY OF GEMINI
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
- const { cmd, commands } = require('../command');
-const yts = require("yt-search");
-const axios = require("axios");
-
-// Video Download Command here
 cmd({
-  pattern: "videopro262727282",
-  alias: ["ytvidpro😹6😹61", "ytvp35272ro", 'ytvideo162626pro'],
-  react: '🚀',
-  desc: "Download videos from YouTube by searching for keywords.",
-  category: "video",
-  use: ".vidx <keywords>",
+  pattern: "gemini1",
+  react: '🤖',
+  desc: "Ask anything to Google Gemini AI.",
+  category: "ai",
+  use: ".gemini *<Your Quoestion>*",
   filename: __filename
-}, async (conn, msg, m, { from, args, reply }) => {
+}, async (conn, mek, msg, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
   try {
-    const query = args.join(" ");
-    if (!query) {
-      return reply("*Please provide a video title or URL*");
+    const text = args.join(" ");
+    if (!text) {
+      return reply(`❗️ Please GFive Me A Question`);
     }
 
-    await reply("> SubZero Searching Video... Please Wait...");
-    
-    const results = await yts(query);
-    if (!results.videos || results.videos.length === 0) {
-      return reply(" No results found for \"" + query + "\".");
+    const prompt = `මම ${pushname}, මම අසන ප්‍රශ්න වලට සිංහලෙන් පිළිතුරු දෙන්න. ඔබේ නම Gemini AI. ඔබ WhatsApp AI Bot කෙනෙක්. ඔබව හැදුවේ ayodya vichakshana කියන කෙනෙක්. සිතන්න ඔබ තරුණ කොල්ලෙක් කියල හිතල එම භාෂාවෙන් පිළිතුරු දෙන්න. Funny වෙන්න, ඔබ bot කෙනෙක් කියල හිතන්න බැරි විදිහට සැබෑ මනුස්සයෙක් කියල හිතන් පිළිතුරු දෙන්න. Use meaningful emojies, don't use English.
+    [Bro = මචං, Bro = සහෝ, බං, Hi = අඩෝ, සිරාවට, එලම, Funny = ආතල්]
+    මගේ ප්‍රශ්නය: ${text}`;
+
+    const payload = {
+      contents: [{
+        parts: [{ text: prompt }]
+      }]
+    };
+
+    const response = await axios.post(
+      GEMINI_API_URL,
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.data || !response.data.candidates || !response.data.candidates[0]?.content?.parts) {
+      return reply("❌ Gemini AI පිළිතුරු ලබා ගැනීමට අසමත් විය. 😢");
     }
-
-    const video = results.videos[0];
-    const url = video.url;
-    const apiURL = "https://api.davidcyriltech.my.id/youtube/mp4?url=" + url;
-
-    await reply("> SubZero Downloading Video... Please Wait...");
-
-    const response = await axios.get(apiURL);
-    if (!response.data.success) {
-      return reply(" Failed to fetch video for \"" + query + "\".");
-    }
-
-    const downloadURL = response.data.result.download_url;
-    await reply("> SubZero Sending Video... Please Wait...");
     
-    await conn.sendMessage(from, { video: { url: downloadURL }, mimetype: "video/mp4" }, { quoted: msg });
-    
-    await reply(" Video sent successfully!");
+    const aiResponse = response.data.candidates[0].content.parts[0].text;
+    await reply(`${aiResponse}`);
   } catch (error) {
-    console.error(error);
-    reply(" An error occurred while processing your request.");
+    console.error("Error:", error.response?.data || error.message);
+    reply("❌ ප්‍රශ්නය සැකසීමේදී දෝෂයක් ඇති විය. 😢");
   }
-});
-
-
-// Audio Download Command here
-
-cmd({
-pattern: "playdjdjdpro",
-alias: ["ytaprrjfnfo", "ytplaypfnfndro"],
-react: '🪄',
-desc: "Download audio from YouTube by searching for keywords.",
-category: "music",
-use: ".playpro <keywords>",
-filename: __filename
-}, async (conn, msg, m, { from, args, reply }) => {
-try {
-const query = args.join(" ");
-if (!query) {
-return reply("_Please provide an audio title or URL_");
-}
-
-await reply("> SubZero Searching Song... Please Wait...");
-
-const results = await yts(query);
-if (!results.videos || results.videos.length === 0) {
-  return reply(" No results found for \"" + query + "\".");
-}
-
-const video = results.videos[0];
-const url = video.url;
-const apiURL = "https://api.davidcyriltech.my.id/youtube/mp3?url=" + url;
-
-await reply("> SubZero Searching For The Song...");
-
-const response = await axios.get(apiURL);
-if (!response.data.success) {
-  return reply(" Failed to fetch audio for \"" + query + "\".");
-}
-
-const downloadURL = response.data.result.download_url;
-await reply("> SubZero Sending Song Wait...");
-
-await conn.sendMessage(from, { audio: { url: downloadURL }, mimetype: 'audio/mpeg', ptt: false }, { quoted: msg });
-
-await reply(" Song sent successfully!");
-
-} catch (error) {
-console.error(error);
-reply(" An error occurred while processing your request.");
-}
 });
