@@ -1,49 +1,72 @@
-// XVIDEO DOWNLOAD COMMAND
-
-const { cmd } = require('../command')
-const { fetchJson } = require('../lib/functions')
-
-const apilink = 'https://www.dark-yasiya-api.site' // API LINK ( DO NOT CHANGE THIS!! )
-
-
+const { cmd, commands } = require('../command');
+const os = require("os");
+const { runtime } = require('../lib/functions');
 
 cmd({
-    pattern: "xvideo1",
-    //alias: ["xvdl","xvdown","x"],
-    react: "🔞",
-    desc: "Download xvideo.com porn video",
-    category: "download",
-    use: '.xvideo < text >',
+    pattern: "rs",
+    alias: ["tones", "phonetones",],
+    desc: "Check uptime and system status",
+    category: "main",
+    react:"🎶",
     filename: __filename
 },
-async(conn, mek, m,{from, quoted, reply, q }) => {
-try{
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+    try {
+        // Generate system status message
+        const status = `*🎺SUBZERO RINGTONES🎺*
 
-  if(!q) return await reply("Please give me few word !")
-    
-const xv_list = await fetchJson(`${apilink}/search/xvideo?q=${q}`)
-if(xv_list.result.length < 0) return await reply("Not results found !")
+────────────
+1. Querky
+2. QUERER QUEREMOS
+3. HK47 - Query
+4. Query-sms-tone
+5. Querida
+6. Querido
+7. Querer
+8. Querersin
+9. 8bit Art Of Thedress
+10. 8bitartofthedress2
+11. Lunas Future
+12. Equestria Girls Tone
+13. Pony Swag
+14. Milkshake Race
+15. Evil Enchantress
+16. Yay
+17. Hush Now Metal Now
+18. Mlp Yay
+19. BIBIDDY-BOOPY
+20. Adventure
+21. Sandviches
+22. Friendship
+23. Redheart - Shh
+24. Flutterbeep
+25. Nurse Redheart
+─────────────
 
-const xv_info = await fetchJson(`${apilink}/download/xvideo?url=${xv_list.result[0].url}`)
-    
-  // FIRST VIDEO
-  
-const msg =` 
-
-       🔥    *XVIDEO DOWNLOADER*   🔥
-
-     
-🔮 *Title* - ${xv_info.result.title}
-🔮 *Views* - ${xv_info.result.views}
-🔮 *Like* - ${xv_info.result.like}`
-await conn.sendMessage( from, { image: { url: xv_info.result.image || '' }, caption: msg }, { quoted: mek })
-
-// SEND VIDEO
-await conn.sendMessage(from, { document: { url: xv_info.result.dl_link }, mimetype: "video/mp4", fileName: xv_info.result.title, caption: xv_info.result.title }, { quoted: mek });
+  \`\`\` USAGE EXAMPLE\`\`\`
+      \`.ringtone\` Querky
 
 
-} catch (error) {
-console.log(error)
-reply(error)
-}
-}) 
+> ᴘᴏᴡᴇʀᴇᴅ ʙʏ sᴜʙᴢᴇʀᴏ ʙᴏᴛ`;
+
+        // Send the status message with an image
+        await conn.sendMessage(from, { 
+            image: { url: `https://i.ibb.co/Y8Bv9P0/mrfrankofc.jpg` },  // Image URL
+            caption: status,
+            contextInfo: {
+                mentionedJid: [m.sender],
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363304325601080@newsletter',
+                    newsletterName: '𝐒𝐔𝐁𝐙𝐄𝐑𝐎 𝐑𝐈𝐍𝐆𝐓𝐎𝐍𝐄𝐒',
+                    serverMessageId: 143
+                }
+            }
+        }, { quoted: mek });
+
+    } catch (e) {
+        console.error("Error :", e);
+        reply(`An error occurred: ${e.message}`);
+    }
+});
