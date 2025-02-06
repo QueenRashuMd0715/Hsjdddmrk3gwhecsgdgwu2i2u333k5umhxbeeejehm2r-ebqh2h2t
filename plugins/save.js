@@ -1,160 +1,405 @@
-const { 
-    BufferJSON, 
-    WA_DEFAULT_EPHEMERAL, 
-    generateWAMessageFromContent, 
-    proto, 
-    generateWAMessageContent, 
-    generateWAMessage, 
-    prepareWAMessageMedia, 
-    downloadContentFromMessage, 
-    areJidsSameUser, 
-    getContentType 
-} = require('@whiskeysockets/baileys');
-
-const { cmd } = require('../command');
-const { updateEnv, readEnv } = require('../lib/database');
-const config = require("../config");
+const config = require('../config')
+const {cmd , commands} = require('../command')
+const os = require("os")
+const {runtime} = require('../lib/functions')
+const pdfUrl = 'https://i.ibb.co/TtgNkGp/20240921-191933.png';
+const ooo = "```"
 
 cmd({
-    pattern: "ping1",
-    desc: "Bot speed test",
-    react: "👋",
-    category: "owner",
+    pattern: "menu000",
+    desc: "To get the menu.",
+    react: "📜",
+    category: "main",
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        const currentConfig = await readEnv();
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
 
-        async function createImage(url) {
-            const { imageMessage } = await generateWAMessageContent({
-                image: { url }
-            }, {
-                upload: conn.waUploadToServer
-            });
-            return imageMessage;
+let menu = {
+main: '',
+download: '',
+group: '',
+owner: '',
+convert: '',
+search: '',
+fun: '',
+other: '',
+fun: '',
+ai: ''
+};
+
+for (let i = 0; i < commands.length; i++) {
+if (commands[i].pattern && !commands[i].dontAddCommandList) {
+menu[commands[i].category] += `*៚❍* ${commands[i].pattern}\n`;
+ }
+}
+
+let menumsg = `
+👋 HELLO ${pushname},
+
+*╭─「 ᴇꜱʜᴜ-ᴍᴅ ᴍᴇɴᴜ ʟɪꜱᴛ」*
+*│⚡ 𝚁𝙰𝙼 𝚄𝚂𝙰𝙶𝙴  -* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
+*│⚡ 𝚁𝚄𝙽𝚃𝙸𝙼𝙴    -* ${runtime(process.uptime())}
+*│⚡ 𝙳𝙴𝚅𝙰𝙻𝙾𝙿𝙴𝚁  - ᴇꜱʜᴀɴ*
+*│⚡ 𝙿𝙻𝙰𝚃𝙵𝙾𝚁𝙼   -* ${os.hostname()}
+*│⚡ 𝚅𝙴𝚁𝚂𝙸𝙾𝙽    - 2.0.0*
+*│⚡ 𝙳𝙴𝚅𝙰𝙻𝙾𝙿𝙴𝚁  - ꜱᴜɴɴʏ.ʟᴋ
+*│⚡ 𝙱𝙾𝚃 𝙽𝙰𝙼𝙴    -Qᴜᴜɴ ᴇꜱʜᴜ-ᴍᴅ*
+*╰────━━━━━──────●●►*
+╭────────────────●●►
+│👨‍💻 *MENU LIST*
+│   ───────
+│ *1 DOWNLOAD MENU ⬇️*
+│ *2 GROUP MENU 🔎*
+│ *3 OWNER MENU 🔄*
+│ *4 CONVERT MENU 👨‍💻*
+│ *5 OTHER MENU👥*
+│ *6 SEARCH MENU ⛩️*
+│ *7 FUN MENU 📄*
+╰───────────●●►
+
+*ꜱᴇʟᴇᴄᴛ ᴀ ᴄᴀᴛᴀɢᴀʀʏ ɪɴ ʀᴇᴘʟʏ ᴛʜᴇ ɴᴜᴍᴇʀ✅*`
+
+let downloadmenu = `
+👻 ${ooo}ᴅᴏᴡɴʟᴏᴀᴅ ᴄᴏᴍᴍᴀɴᴅꜱ${ooo} 👻\n\n${menu.download}
+`
+ let groupmenu = `
+👻 ${ooo}ɢʀᴏᴜᴘ ᴄᴏᴍᴍᴀɴᴅꜱ${ooo} 👻\n\n${menu.group}
+`
+let ownermenu = `
+👻 ${ooo}ᴏᴡɴᴇʀ ᴄᴏᴍᴍᴀɴᴅꜱ${ooo} 👻\n\n${menu.owner}
+`
+let convertmenu = `
+👻 ${ooo}ᴄᴏɴᴠᴇʀᴛ ᴄᴏᴍᴍᴀɴᴅꜱ${ooo} 👻\n\n${menu.convert}
+`
+ let othermenu = `
+👻 ${ooo}ᴏᴛʜᴇʀ ᴄᴏᴍᴍᴀɴᴅꜱ${ooo} 👻\n\n${menu.other}
+`
+let searchmenu = `
+👻 ${ooo}ꜱᴇᴀʀᴄʜ ᴄᴏᴍᴍᴀɴᴅꜱ${ooo} 👻\n\n${menu.search}
+`  
+let funmenu = `
+👻 ${ooo}ꜰᴜɴ ᴄᴏᴍᴍᴀɴᴅꜱ${ooo} 👻\n\n${menu.fun}
+`     
+// Send the initial message and store the message ID
+const sentMsg = await conn.sendMessage(from, {image: {url: config.BOT_IMG },caption: menumsg },{quoted: mek})
+const messageID = sentMsg.key.id; // Save the message ID for later reference
+
+
+// Listen for the user's response
+conn.ev.on('messages.upsert', async (messageUpdate) => {
+    const mek = messageUpdate.messages[0];
+    if (!mek.message) return;
+    const messageType = mek.message.conversation || mek.message.extendedTextMessage?.text;
+    const from = mek.key.remoteJid;
+    const sender = mek.key.participant || mek.key.remoteJid;
+
+    // Check if the message is a reply to the previously sent message
+    const isReplyToSentMsg = mek.message.extendedTextMessage && mek.message.extendedTextMessage.contextInfo.stanzaId === messageID;
+
+    if (isReplyToSentMsg) {
+        // React to the user's reply (the "1" or "2" message)
+        await conn.sendMessage(from, { react: { text: '👾', key: mek.key } });
+
+
+        if (messageType === '1') {
+            // Handle option 1 (Audio File
+  const sentMsg = await conn.sendMessage(from, {
+    document: { url: pdfUrl }, // Path to your PDF file
+    fileName: config.FILENAME, // Filename for the document
+    mimetype: "application/pdf",
+    fileLength: 99999999999999,
+    caption: downloadmenu,
+    contextInfo: {
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterName: config.CHANNEL_NAME,
+            newsletterJid: config.NEWSLETTER_ID,
+        },
+        externalAdReply: {
+            title: config.TITLE,
+            body: config.BODY,
+            thumbnailUrl: config.BOT_IMG, // Use the URL directly here
+            sourceUrl: config.WEBURL,
+            mediaType: 1,
+            renderLargerThumbnail: true
         }
-
-        const settingsDetails = [{
-            body: proto.Message.InteractiveMessage.Body.create({
-                text: `᮰ 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ᮰`
-            }),
-            footer: proto.Message.InteractiveMessage.Footer.create({
-                text: config.FOOTER
-            }),
-            header: proto.Message.InteractiveMessage.Header.create({
-                title: `*𝐐𝐔𝚵𝚵𝐍 𝐑𝚫𝐒𝐇𝐔 𝐌𝐃 𝐒𝐏𝐄𝐄𝐃 : ${ping}ms*\n\n\n> *© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*`,
-                hasMediaAttachment: true,
-                imageMessage: await createImage('https://i.ibb.co/g98HkMY/8188.jpg')
-            }),
-            nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                buttons: [
-                    {
-                        "name": "cta_url",
-                        "buttonParamsJson": JSON.stringify({
-                            "display_text": "OWNER",
-                            "url": "https://wa.me/94727319036"
-                        })
-                    },
-                    {
-                        "name": "cta_url",
-                        "buttonParamsJson": JSON.stringify({
-                            "display_text": "CHANNEL",
-                            "url": "https://whatsapp.com/channel/0029Vb2GOyk6rsQwJSBa7T2h"
-                        })
-                    },
-                    {
-                        "name": "cta_url",
-                        "buttonParamsJson": JSON.stringify({
-                            "display_text": "YOUTUBE",
-                            "url": "https://youtube.com/@rashumodz_0715?si=5pg_wumwy6VzizMP"
-                        })
-                    },
-                    {
-                        "name": "cta_url",
-                        "buttonParamsJson": JSON.stringify({
-                            "display_text": "REPO",
-                            "url": "https://github.com/NipunHarshana0/QUEEN-RASHU-MD-V1"
-                        })
-                    }
-                ]
-            })
-        }];
-
-        const msg = generateWAMessageFromContent(from, {
-            viewOnceMessage: {
-                message: {
-                    interactiveMessage: proto.Message.InteractiveMessage.create({
-                        body: proto.Message.InteractiveMessage.Body.create({
-                            text: '*᮰ 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ᮰*\n\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*'
-                        }),
-                        footer: proto.Message.InteractiveMessage.Footer.create({
-                            text: config.FOOTER
-                        }),
-                        header: proto.Message.InteractiveMessage.Header.create({
-                            hasMediaAttachment: false
-                        }),
-                        carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.create({
-                            cards: settingsDetails
-                        })
-                    })
-                }
-            }
-        }, {});
-
-        await conn.relayMessage(from, msg.message, {
-            messageId: msg.key.id
-        });
-
-        const settingsHandler = async (msgUpdate) => {
-            try {
-                const message = msgUpdate.messages[0];
-
-                if (message.message?.interactiveResponseMessage?.selectedId) {
-                    const selectedOption = message.message.interactiveResponseMessage.selectedId;
-
-                    const toggleSetting = async (setting) => {
-                        const newValue = currentConfig[setting] === 'true' ? 'false' : 'true';
-                        await updateEnv(setting, newValue);
-                        reply(`✅ ${setting} updated to ${newValue}`);
-                    };
-
-                    switch (selectedOption) {
-                        case 'mode_settings':
-                            reply(`Current Mode: ${currentConfig.MODE}\nAvailable Modes:\n1. public\n2. private\n3. groups\n4. inbox\n\nReply with desired mode.`);
-                            break;
-                        case 'auto_voice':
-                            await toggleSetting('AUTO_VOICE');
-                            break;
-                        case 'auto_sticker':
-                            await toggleSetting('AUTO_STICKER');
-                            break;
-                        case 'auto_reply':
-                            await toggleSetting('AUTO_REPLY');
-                            break;
-                        case 'auto_read':
-                            await toggleSetting('AUTO_READ_STATUS');
-                            break;
-                        case 'auto_react':
-                            await toggleSetting('AUTO_REACT');
-                            break;
-                        case 'reset_all':
-                            reply('Resetting all settings to default...');
-                            break;
-                    }
-
-                    conn.ev.off('messages.upsert', settingsHandler);
-                }
-            } catch (error) {
-                console.error("Settings Handler Error:", error);
-                reply(`❌ An error occurred: ${error.message}`);
-            }
-        };
-
-        conn.ev.on('messages.upsert', settingsHandler);
-
-    } catch (e) {
-        console.error(e);
-        reply(`An error occurred: ${e.message}`);
     }
 });
+        }
+            }
+})
+// Listen for the user's response
+conn.ev.on('messages.upsert', async (messageUpdate) => {
+    const mek = messageUpdate.messages[0];
+    if (!mek.message) return;
+    const messageType = mek.message.conversation || mek.message.extendedTextMessage?.text;
+    const from = mek.key.remoteJid;
+    const sender = mek.key.participant || mek.key.remoteJid;
+
+    // Check if the message is a reply to the previously sent message
+    const isReplyToSentMsg = mek.message.extendedTextMessage && mek.message.extendedTextMessage.contextInfo.stanzaId === messageID;
+
+    if (isReplyToSentMsg) {
+        // React to the user's reply (the "1" or "2" message)
+        await conn.sendMessage(from, { react: { text: '👾', key: mek.key } });
+
+
+        if (messageType === '2') {
+            // Handle option 1 (Audio File)
+const sentMsg = await conn.sendMessage(from, {
+document: { url: pdfUrl }, // Path to your PDF file
+    fileName: config.FILENAME, // Filename for the document
+    mimetype: "application/pdf",
+    fileLength: 99999999999999,
+    caption: groupmenu,
+    contextInfo: {
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterName: config.CHANNEL_NAME,
+            newsletterJid: config.NEWSLETTER_ID,
+        },
+        externalAdReply: {
+            title: config.TITLE,
+            body: config.BODY,
+            thumbnailUrl: config.BOT_IMG, // Use the URL directly here
+            sourceUrl: config.WEBURL,
+            mediaType: 1,
+            renderLargerThumbnail: true
+        }
+    }
+});
+        }
+            }
+})
+// Listen for the user's response
+conn.ev.on('messages.upsert', async (messageUpdate) => {
+    const mek = messageUpdate.messages[0];
+    if (!mek.message) return;
+    const messageType = mek.message.conversation || mek.message.extendedTextMessage?.text;
+    const from = mek.key.remoteJid;
+    const sender = mek.key.participant || mek.key.remoteJid;
+
+    // Check if the message is a reply to the previously sent message
+    const isReplyToSentMsg = mek.message.extendedTextMessage && mek.message.extendedTextMessage.contextInfo.stanzaId === messageID;
+
+    if (isReplyToSentMsg) {
+        // React to the user's reply (the "1" or "2" message)
+        await conn.sendMessage(from, { react: { text: '👾', key: mek.key } });
+
+
+        if (messageType === '3') {
+            // Handle option 1 (Audio File)
+const sentMsg = await conn.sendMessage(from, {
+document: { url: pdfUrl }, // Path to your PDF file
+    fileName: config.FILENAME, // Filename for the document
+    mimetype: "application/pdf",
+    fileLength: 99999999999999,
+    caption: ownermenu,
+    contextInfo: {
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterName: config.CHANNEL_NAME,
+            newsletterJid: config.NEWSLETTER_ID,
+        },
+        externalAdReply: {
+            title: config.TITLE,
+            body: config.BODY,
+            thumbnailUrl: config.BOT_IMG, // Use the URL directly here
+            sourceUrl: config.WEBURL,
+            mediaType: 1,
+            renderLargerThumbnail: true
+        }
+    }
+});
+        }
+            }
+})
+// Listen for the user's response
+conn.ev.on('messages.upsert', async (messageUpdate) => {
+    const mek = messageUpdate.messages[0];
+    if (!mek.message) return;
+    const messageType = mek.message.conversation || mek.message.extendedTextMessage?.text;
+    const from = mek.key.remoteJid;
+    const sender = mek.key.participant || mek.key.remoteJid;
+
+    // Check if the message is a reply to the previously sent message
+    const isReplyToSentMsg = mek.message.extendedTextMessage && mek.message.extendedTextMessage.contextInfo.stanzaId === messageID;
+
+    if (isReplyToSentMsg) {
+        // React to the user's reply (the "1" or "2" message)
+        await conn.sendMessage(from, { react: { text: '👾', key: mek.key } });
+
+
+        if (messageType === '4') {
+            // Handle option 1 (Audio File)
+const sentMsg = await conn.sendMessage(from, {
+document: { url: pdfUrl }, // Path to your PDF file
+    fileName: config.FILENAME, // Filename for the document
+    mimetype: "application/pdf",
+    fileLength: 99999999999999,
+    caption: convertmenu,
+    contextInfo: {
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterName: config.CHANNEL_NAME,
+            newsletterJid: config.NEWSLETTER_ID,
+        },
+        externalAdReply: {
+            title: config.TITLE,
+            body: config.BODY,
+            thumbnailUrl: config.BOT_IMG, // Use the URL directly here
+            sourceUrl: config.WEBURL,
+            mediaType: 1,
+            renderLargerThumbnail: true
+        }
+    }
+});
+            }
+    }
+            })
+ // Listen for the user's response
+conn.ev.on('messages.upsert', async (messageUpdate) => {
+    const mek = messageUpdate.messages[0];
+    if (!mek.message) return;
+    const messageType = mek.message.conversation || mek.message.extendedTextMessage?.text;
+    const from = mek.key.remoteJid;
+    const sender = mek.key.participant || mek.key.remoteJid;
+
+    // Check if the message is a reply to the previously sent message
+    const isReplyToSentMsg = mek.message.extendedTextMessage && mek.message.extendedTextMessage.contextInfo.stanzaId === messageID;
+
+    if (isReplyToSentMsg) {
+        // React to the user's reply (the "1" or "2" message)
+        await conn.sendMessage(from, { react: { text: '👾', key: mek.key } });
+
+
+        if (messageType === '5') {
+            // Handle option 1 (Audio File)
+const sentMsg = await conn.sendMessage(from, {
+document: { url: pdfUrl }, // Path to your PDF file
+    fileName: config.FILENAME, // Filename for the document
+    mimetype: "application/pdf",
+    fileLength: 99999999999999,
+    caption: othermenu,
+    contextInfo: {
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterName: config.CHANNEL_NAME,
+            newsletterJid: config.NEWSLETTER_ID,
+        },
+        externalAdReply: {
+            title: config.TITLE,
+            body: config.BODY,
+            thumbnailUrl: config.BOT_IMG, // Use the URL directly here
+            sourceUrl: config.WEBURL,
+            mediaType: 1,
+            renderLargerThumbnail: true
+        }
+    }
+});
+    }
+    }
+        })
+ // Listen for the user's response
+conn.ev.on('messages.upsert', async (messageUpdate) => {
+    const mek = messageUpdate.messages[0];
+    if (!mek.message) return;
+    const messageType = mek.message.conversation || mek.message.extendedTextMessage?.text;
+    const from = mek.key.remoteJid;
+    const sender = mek.key.participant || mek.key.remoteJid;
+
+    // Check if the message is a reply to the previously sent message
+    const isReplyToSentMsg = mek.message.extendedTextMessage && mek.message.extendedTextMessage.contextInfo.stanzaId === messageID;
+
+    if (isReplyToSentMsg) {
+        // React to the user's reply (the "1" or "2" message)
+        await conn.sendMessage(from, { react: { text: '👾', key: mek.key } });
+
+
+        if (messageType === '6') {
+            // Handle option 1 (Audio File)
+const sentMsg = await conn.sendMessage(from, {
+document: { url: pdfUrl }, // Path to your PDF file
+    fileName: config.FILENAME, // Filename for the document
+    mimetype: "application/pdf",
+    fileLength: 99999999999999,
+    caption: searchmenu,
+    contextInfo: {
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterName: config.CHANNEL_NAME,
+            newsletterJid: config.NEWSLETTER_ID,
+        },
+        externalAdReply: {
+            title: config.TITLE,
+            body: config.BODY,
+            thumbnailUrl: config.BOT_IMG, // Use the URL directly here
+            sourceUrl: config.WEBURL,
+            mediaType: 1,
+            renderLargerThumbnail: true
+        }
+    }
+});
+            }
+    }
+           })
+ // Listen for the user's response
+conn.ev.on('messages.upsert', async (messageUpdate) => {
+    const mek = messageUpdate.messages[0];
+    if (!mek.message) return;
+    const messageType = mek.message.conversation || mek.message.extendedTextMessage?.text;
+    const from = mek.key.remoteJid;
+    const sender = mek.key.participant || mek.key.remoteJid;
+
+    // Check if the message is a reply to the previously sent message
+    const isReplyToSentMsg = mek.message.extendedTextMessage && mek.message.extendedTextMessage.contextInfo.stanzaId === messageID;
+
+    if (isReplyToSentMsg) {
+        // React to the user's reply (the "1" or "2" message)
+        await conn.sendMessage(from, { react: { text: '👾', key: mek.key } });
+
+
+        if (messageType === '7') {
+            // Handle option 1 (Audio File)
+const sentMsg = await conn.sendMessage(from, {
+document: { url: pdfUrl }, // Path to your PDF file
+    fileName: config.FILENAME, // Filename for the document
+    mimetype: "application/pdf",
+    fileLength: 99999999999999,
+    caption: funmenu,
+    contextInfo: {
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterName: config.CHANNEL_NAME,
+            newsletterJid: config.NEWSLETTER_ID,
+        },
+        externalAdReply: {
+            title: config.TITLE,
+            body: config.BODY,
+            thumbnailUrl: config.BOT_IMG, // Use the URL directly here
+            sourceUrl: config.WEBURL,
+            mediaType: 1,
+            renderLargerThumbnail: true
+        }
+    }
+});
+            }
+            }
+})
+
+
+} catch (e) {
+console.log(e);
+reply(`${e}`);
+}
+});
+
+
