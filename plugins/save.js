@@ -1,60 +1,155 @@
+const { downloadTiktok } = require('@mrnima/tiktok-downloader');
+const { facebook } = require("@mrnima/facebook-downloader");
+const cheerio = require("cheerio");
+const { igdl } = require("ruhend-scraper");
 const axios = require('axios');
-const config = require('../config');
-const { cmd, commands } = require('../command');
+const { cmd, commands } = require("../lib/command");
+const apkdl = require('../lib/apkdl')
+const xapilink = 'https://www.dark-yasiya-api.site'
+const wiki = require('wikipedia');
+const { Buffer } = require("buffer");
+const { BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, getBinaryNodeChildren, generateWAMessageContent, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType, downloadContentFromMessage} = require('@whiskeysockets/baileys');
+
+const Esana = require("@sl-code-lords/esana-news");
+var api = new Esana();
+const DYXT_NEWS = require("@dark-yasiya/news-scrap");
+const newss = new DYXT_NEWS();
+
+const apilink = 'https://dizer-adaderana-news-api.vercel.app/news'; 
+
+const fetch = require("node-fetch");
+const { fetchJson } = require("../lib/functions");
+const yts = require("yt-search");
+
+function someFunction(param1, param2, param3, param4, param5) {
+  return anotherFunction(param5 + 0x2b, param4);
+}
+
+const { downloadTiktok } = require('@mrnima/tiktok-downloader');
+const { facebook } = require("@mrnima/facebook-downloader");
+const cheerio = require("cheerio");
+const { igdl } = require("ruhend-scraper");
+const axios = require('axios');
+const { cmd, commands } = require("../lib/command");
+const apkdl = require('../lib/apkdl')
+const xapilink = 'https://www.dark-yasiya-api.site'
+const wiki = require('wikipedia');
+const { Buffer } = require("buffer");
+const { BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, getBinaryNodeChildren, generateWAMessageContent, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType, downloadContentFromMessage} = require('@whiskeysockets/baileys');
+
+const Esana = require("@sl-code-lords/esana-news");
+var api = new Esana();
+const DYXT_NEWS = require("@dark-yasiya/news-scrap");
+const newss = new DYXT_NEWS();
+
+const apilink = 'https://dizer-adaderana-news-api.vercel.app/news'; 
+
+const fetch = require("node-fetch");
+const { fetchJson } = require("../lib/functions");
+const yts = require("yt-search");
+
+function someFunction(param1, param2, param3, param4, param5) {
+  return anotherFunction(param5 + 0x2b, param4);
+}
+
 
 cmd({
-    pattern: "1vv",
-    react : "🦠",
-    alias: ['retrive', "viewonce"],
-    desc: "Fetch and resend a ViewOnce message content (image/video/voice).",
-    category: "misc",
-    use: '<query>',
+    pattern: "ytsearch",
+     alias: ["yeser", "yts1"],
+    desc: "button test",
+    react: "🎵",
+    category: "download",
     filename: __filename
 },
-async (conn, mek, m, { from, reply }) => {
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        const quotedMessage = m.msg.contextInfo.quotedMessage; // Get quoted message
-
-        if (quotedMessage && quotedMessage.viewOnceMessageV2) {
-            const quot = quotedMessage.viewOnceMessageV2;
-            if (quot.message.imageMessage) {
-                let cap = quot.message.imageMessage.caption;
-                let anu = await conn.downloadAndSaveMediaMessage(quot.message.imageMessage);
-                return conn.sendMessage(from, { image: { url: anu }, caption: cap }, { quoted: mek });
-            }
-            if (quot.message.videoMessage) {
-                let cap = quot.message.videoMessage.caption;
-                let anu = await conn.downloadAndSaveMediaMessage(quot.message.videoMessage);
-                return conn.sendMessage(from, { video: { url: anu }, caption: cap }, { quoted: mek });
-            }
-            if (quot.message.audioMessage) {
-                let anu = await conn.downloadAndSaveMediaMessage(quot.message.audioMessage);
-                return conn.sendMessage(from, { audio: { url: anu } }, { quoted: mek });
-            }
+    if (!q) return reply(`*Need title*`);
+        let search = await yts(q);
+        let videos = search.all;
+        console.log(videos)
+        if (!videos || videos.length === 0) {
+          reply('No video found');
+          return;
         }
-
-        // If there is no quoted message or it's not a ViewOnce message
-        if (!m.quoted) return reply("Please reply to a ViewOnce message.");
-        if (m.quoted.mtype === "viewOnceMessage") {
-            if (m.quoted.message.imageMessage) {
-                let cap = m.quoted.message.imageMessage.caption;
-                let anu = await conn.downloadAndSaveMediaMessage(m.quoted.message.imageMessage);
-                return conn.sendMessage(from, { image: { url: anu }, caption: cap }, { quoted: mek });
-            }
-            else if (m.quoted.message.videoMessage) {
-                let cap = m.quoted.message.videoMessage.caption;
-                let anu = await conn.downloadAndSaveMediaMessage(m.quoted.message.videoMessage);
-                return conn.sendMessage(from, { video: { url: anu }, caption: cap }, { quoted: mek });
-            }
-        } else if (m.quoted.message.audioMessage) {
-            let anu = await conn.downloadAndSaveMediaMessage(m.quoted.message.audioMessage);
-            return conn.sendMessage(from, { audio: { url: anu } }, { quoted: mek });
-        } else {
-            return reply("> *This is not a ViewOnce message.*");
+        // Choose between 1 and 5 videos at random
+        const numVideos = Math.min(videos.length, Math.floor(Math.random() * 10) + 1);
+        const selectedVideos = [];
+        while (selectedVideos.length < numVideos) {
+          const randomIndex = Math.floor(Math.random() * videos.length);
+          const randomVideo = videos.splice(randomIndex, 1)[0]; // Avoid selecting the same videos
+          selectedVideos.push(randomVideo);
         }
+        let push = [];
+        for (let i = 0; i < selectedVideos.length; i++) {
+          let video = selectedVideos[i];
+          let cap = `Title : ${video.title}`;
+          let foot = `> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʟᴀᴋᴀ-ᴍᴅ 👨‍💻`;
+          const mediaMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: conn.waUploadToServer });
+          push.push({
+            body: proto.Message.InteractiveMessage.Body.fromObject({
+              text: cap
+            }),
+            footer: proto.Message.InteractiveMessage.Footer.fromObject({
+              text: foot
+            }),
+            header: proto.Message.InteractiveMessage.Header.create({
+              title: `Video ${i + 1}`,
+              subtitle: '',
+              hasMediaAttachment: true,
+              ...mediaMessage
+            }),
+            nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+              buttons: [
+                {
+                  "name": "cta_copy",
+                  "buttonParamsJson": `{"display_text":"Copy Url","id":"1234","copy_code":"${video.url}"}`
+                }
+              ]
+            })
+          });
+        }
+        let sadee = `lakaofc`;
+        let foot2 = `> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ʟᴀᴋᴀ-ᴍᴅ 👨‍💻`;
+        const msg = generateWAMessageFromContent(from, {
+          viewOnceMessage: {
+            message: {
+              messageContextInfo: {
+                deviceListMetadata: {},
+                deviceListMetadataVersion: 2
+              },
+              interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+                body: proto.Message.InteractiveMessage.Body.create({
+                  text: sadee
+                }),
+                footer: proto.Message.InteractiveMessage.Footer.create({
+                  text: foot2
+                }),
+                header: proto.Message.InteractiveMessage.Header.create({
+                  hasMediaAttachment: false
+                }),
+                carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+                  cards: push
+                }),
+                contextInfo: {
+                      mentionedJid: ['94781121579@s.whatsapp.net'], 
+                      forwardingScore: 999,
+                      isForwarded: true,
+                    forwardedNewsletterMessageInfo: {
+                      newsletterJid: '120363380235298511@newsletter',
+                      newsletterName: 'ʟᴀᴋᴀ-ᴍᴅ',
+                      serverMessageId: 143
+                    }
+                    }
+              })
+            }
+          }
+        }, {quoted:mek});
+        await conn.relayMessage(from, msg.message, {
+          messageId: msg.key.id
+        });
+    console.log('Button Send Sucsses');
     } catch (e) {
-        console.log("Error:", e);
-        reply("An error occurred while fetching the ViewOnce message.");
+        console.log(e);
+        reply(`${e}`);
     }
-});
-
+})
