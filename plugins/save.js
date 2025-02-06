@@ -1,21 +1,3 @@
-const { downloadTiktok } = require('@mrnima/tiktok-downloader');
-const { facebook } = require("@mrnima/facebook-downloader");
-const cheerio = require("cheerio");
-const { igdl } = require("ruhend-scraper");
-const axios = require('axios');
-const { cmd, commands } = require("../lib/command");
-const apkdl = require('../lib/apkdl')
-const xapilink = 'https://www.dark-yasiya-api.site'
-const wiki = require('wikipedia');
-const { Buffer } = require("buffer");
-const { BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, getBinaryNodeChildren, generateWAMessageContent, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType, downloadContentFromMessage} = require('@whiskeysockets/baileys');
-
-const Esana = require("@sl-code-lords/esana-news");
-var api = new Esana();
-const DYXT_NEWS = require("@dark-yasiya/news-scrap");
-const newss = new DYXT_NEWS();
-
-const apilink = 'https://dizer-adaderana-news-api.vercel.app/news'; 
 
 const fetch = require("node-fetch");
 const { fetchJson } = require("../lib/functions");
