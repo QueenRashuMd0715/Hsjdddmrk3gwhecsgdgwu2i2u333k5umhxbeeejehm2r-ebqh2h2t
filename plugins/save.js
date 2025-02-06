@@ -1,72 +1,60 @@
+const axios = require('axios');
+const config = require('../config');
 const { cmd, commands } = require('../command');
-const os = require("os");
-const { runtime } = require('../lib/functions');
 
 cmd({
-    pattern: "rs",
-    alias: ["tones", "phonetones",],
-    desc: "Check uptime and system status",
-    category: "main",
-    react:"🎶",
+    pattern: "1vv",
+    react : "🦠",
+    alias: ['retrive', "viewonce"],
+    desc: "Fetch and resend a ViewOnce message content (image/video/voice).",
+    category: "misc",
+    use: '<query>',
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+async (conn, mek, m, { from, reply }) => {
     try {
-        // Generate system status message
-        const status = `*🎺SUBZERO RINGTONES🎺*
+        const quotedMessage = m.msg.contextInfo.quotedMessage; // Get quoted message
 
-────────────
-1. Querky
-2. QUERER QUEREMOS
-3. HK47 - Query
-4. Query-sms-tone
-5. Querida
-6. Querido
-7. Querer
-8. Querersin
-9. 8bit Art Of Thedress
-10. 8bitartofthedress2
-11. Lunas Future
-12. Equestria Girls Tone
-13. Pony Swag
-14. Milkshake Race
-15. Evil Enchantress
-16. Yay
-17. Hush Now Metal Now
-18. Mlp Yay
-19. BIBIDDY-BOOPY
-20. Adventure
-21. Sandviches
-22. Friendship
-23. Redheart - Shh
-24. Flutterbeep
-25. Nurse Redheart
-─────────────
-
-  \`\`\` USAGE EXAMPLE\`\`\`
-      \`.ringtone\` Querky
-
-
-> ᴘᴏᴡᴇʀᴇᴅ ʙʏ sᴜʙᴢᴇʀᴏ ʙᴏᴛ`;
-
-        // Send the status message with an image
-        await conn.sendMessage(from, { 
-            image: { url: `https://i.ibb.co/Y8Bv9P0/mrfrankofc.jpg` },  // Image URL
-            caption: status,
-            contextInfo: {
-                mentionedJid: [m.sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363304325601080@newsletter',
-                    newsletterName: '𝐒𝐔𝐁𝐙𝐄𝐑𝐎 𝐑𝐈𝐍𝐆𝐓𝐎𝐍𝐄𝐒',
-                    serverMessageId: 143
-                }
+        if (quotedMessage && quotedMessage.viewOnceMessageV2) {
+            const quot = quotedMessage.viewOnceMessageV2;
+            if (quot.message.imageMessage) {
+                let cap = quot.message.imageMessage.caption;
+                let anu = await conn.downloadAndSaveMediaMessage(quot.message.imageMessage);
+                return conn.sendMessage(from, { image: { url: anu }, caption: cap }, { quoted: mek });
             }
-        }, { quoted: mek });
+            if (quot.message.videoMessage) {
+                let cap = quot.message.videoMessage.caption;
+                let anu = await conn.downloadAndSaveMediaMessage(quot.message.videoMessage);
+                return conn.sendMessage(from, { video: { url: anu }, caption: cap }, { quoted: mek });
+            }
+            if (quot.message.audioMessage) {
+                let anu = await conn.downloadAndSaveMediaMessage(quot.message.audioMessage);
+                return conn.sendMessage(from, { audio: { url: anu } }, { quoted: mek });
+            }
+        }
 
+        // If there is no quoted message or it's not a ViewOnce message
+        if (!m.quoted) return reply("Please reply to a ViewOnce message.");
+        if (m.quoted.mtype === "viewOnceMessage") {
+            if (m.quoted.message.imageMessage) {
+                let cap = m.quoted.message.imageMessage.caption;
+                let anu = await conn.downloadAndSaveMediaMessage(m.quoted.message.imageMessage);
+                return conn.sendMessage(from, { image: { url: anu }, caption: cap }, { quoted: mek });
+            }
+            else if (m.quoted.message.videoMessage) {
+                let cap = m.quoted.message.videoMessage.caption;
+                let anu = await conn.downloadAndSaveMediaMessage(m.quoted.message.videoMessage);
+                return conn.sendMessage(from, { video: { url: anu }, caption: cap }, { quoted: mek });
+            }
+        } else if (m.quoted.message.audioMessage) {
+            let anu = await conn.downloadAndSaveMediaMessage(m.quoted.message.audioMessage);
+            return conn.sendMessage(from, { audio: { url: anu } }, { quoted: mek });
+        } else {
+            return reply("> *This is not a ViewOnce message.*");
+        }
     } catch (e) {
-        console.error("Error :", e);
-        reply(`An error occurred: ${e.message}`);
+        console.log("Error:", e);
+        reply("An error occurred while fetching the ViewOnce message.");
     }
 });
+
