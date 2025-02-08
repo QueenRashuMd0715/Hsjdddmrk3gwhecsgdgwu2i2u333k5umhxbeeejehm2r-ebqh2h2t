@@ -1,26 +1,3 @@
-/*
-Credits To - Github: Kgtech-cmr
-
-
-$$$$$$\            $$\                                               
-$$  __$$\           $$ |                                              
-$$ /  \__|$$\   $$\ $$$$$$$\  $$$$$$$$\  $$$$$$\   $$$$$$\   $$$$$$\  
-\$$$$$$\  $$ |  $$ |$$  __$$\ \____$$  |$$  __$$\ $$  __$$\ $$  __$$\ 
- \____$$\ $$ |  $$ |$$ |  $$ |  $$$$ _/ $$$$$$$$ |$$ |  \__|$$ /  $$ |
-$$\   $$ |$$ |  $$ |$$ |  $$ | $$  _/   $$   ____|$$ |      $$ |  $$ |
-\$$$$$$  |\$$$$$$  |$$$$$$$  |$$$$$$$$\ \$$$$$$$\ $$ |      \$$$$$$  |
- \______/  \______/ \_______/ \________| \_______|\__|       \______/
-
-Project Name : SubZero MD
-Creator      : Darrell Mucheri ( Mr Frank OFC )
-Repo         : https//github.com/mrfrank-ofc/SUBZERO-MD
-Support      : wa.me/18062212660
-*/
-
-
-
-
-
 
 const { cmd } = require('../command'); // Assurez-vous que cmd est bien défini dans votre projet
 const axios = require('axios');
@@ -37,7 +14,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
     try {
         // Liste des options NSFW
         const nsfwList = `
-   *❦ \`ＳＵＢＺＥＲＯ ＳＥＸＹ ＨＵＢ.🎀🍭\`*
+   *❦ \`Q U E E N  R A S H U ＳＥＸＹ ＨＵＢ.🎀🍭\`*
 
 1️⃣ *EJACULATION💦*
 2️⃣ *PENIS🍆*
@@ -50,14 +27,17 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
 9️⃣ *SUSPENSION🍑*
 1️⃣0️⃣ *KISS💋*
 
+> උඩ තියෙන CMD 10 ඕනි එක Type කරන්න එතකොට ඔයාට Dawnload කරගන්න පුලුවන් 😁
 ────────────────
 *_Simply type the number corresponding to the option you'd like to choose._*
 ────────────────
 ⚠️\`[NOTICE]\` 
-*By Continueing You Agree that you are 18+ .*`;
+*By Continueing You Agree that you are 18+*
+
+> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`;
 
         // URL image for NSFW
-        const imageUrl = 'https://i.ibb.co/j8hv83f/Manul-Ofc-X.jpg';
+        const imageUrl = 'https://i.ibb.co/g98HkMY/8188.jpg';
 
         // Envoi de la liste avec l'image et la légende
         await conn.sendMessage(from, {
@@ -92,7 +72,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
             // Envoi de l'image avec le caption
             await conn.sendMessage(from, {
                 image: { url: imageUrl },
-                caption: `Here your ${command} image 🔞🍆🍑.\n> © Gᴇɴᴇʀᴀᴛᴇᴅ ʙʏ Nᴀsᴛʏ SᴜʙZᴇʀᴏ😋🍑🔞.`,
+                caption: `Here your ${command} image 🔞🍆🍑.\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*😋🍑🔞.`,
             }, { quoted: mek });
         } else {
             await reply('❌ No image found for this category.');
@@ -124,7 +104,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
             // Envoi de l'image avec le caption
             await conn.sendMessage(from, {
                 image: { url: imageUrl },
-                caption: `Here your ${command} image 🔞🍆🍑.\n> © Gᴇɴᴇʀᴀᴛᴇᴅ ʙʏ Nᴀsᴛʏ SᴜʙZᴇʀᴏ😋🍑🔞.`,
+                caption: `Here your ${command} image 🔞🍆🍑.\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*😋🍑🔞.`,
             }, { quoted: mek });
         } else {
             await reply('❌ No image found for this category.');
@@ -156,7 +136,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
             // Envoi de l'image avec le caption
             await conn.sendMessage(from, {
                 image: { url: imageUrl },
-                caption: `Here your ${command} image 🔞🍆🍑.\n> © Gᴇɴᴇʀᴀᴛᴇᴅ ʙʏ Nᴀsᴛʏ SᴜʙZᴇʀᴏ😋🍑🔞.`,
+                caption: `Here your ${command} image 🔞🍆🍑.\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*😋🍑🔞.`,
             }, { quoted: mek });
         } else {
             await reply('❌ No image found for this category.');
@@ -190,7 +170,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
             // Envoi de l'image dans le chat
             await conn.sendMessage(from, {
                 image: { url: imageUrl },
-                caption: 'Here is your nude NSFW image 🔞🔥.\n> © Gᴇɴᴇʀᴀᴛᴇᴅ ʙʏ Nᴀsᴛʏ SᴜʙZᴇʀᴏ😋🔥🔞.'
+                caption: 'Here is your nude NSFW image 🔞🔥.\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*😋🔥🔞.'
             }, { quoted: mek });
         } else {
             reply('❌ Unable to fetch image. Please try again later.');
@@ -224,7 +204,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
             // Envoi de l'image dans le chat
             await conn.sendMessage(from, {
                 image: { url: imageUrl },
-                caption: 'Here is your sex NSFW image 🔞🔥.\n> © Gᴇɴᴇʀᴀᴛᴇᴅ ʙʏ Nᴀsᴛʏ SᴜʙZᴇʀᴏ😋🔥🔞.'
+                caption: 'Here is your sex NSFW image 🔞🔥.\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*😋🔥🔞.'
             }, { quoted: mek });
         } else {
             reply('❌ Unable to fetch image. Please try again later.');
@@ -258,7 +238,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
             // Envoi de l'image dans le chat
             await conn.sendMessage(from, {
                 image: { url: imageUrl },
-                caption: 'Here is your cute NSFW image 🔞💖.\n> © Gᴇɴᴇʀᴀᴛᴇᴅ ʙʏ Nᴀsᴛʏ SᴜʙZᴇʀᴏ😋💖🔞.'
+                caption: 'Here is your cute NSFW image 🔞💖.\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*😋💖🔞.'
             }, { quoted: mek });
         } else {
             reply('❌ Unable to fetch image. Please try again later.');
@@ -292,7 +272,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
             // Envoi de l'image dans le chat
             await conn.sendMessage(from, {
                 image: { url: imageUrl },
-                caption: 'Here is your orgasm NSFW image 🔞💥.\n> © Gᴇɴᴇʀᴀᴛᴇᴅ ʙʏ Nᴀsᴛʏ SᴜʙZᴇʀᴏ😋💥🔞.'
+                caption: 'Here is your orgasm NSFW image 🔞💥.\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*😋💥🔞.'
             }, { quoted: mek });
         } else {
             reply('❌ Unable to fetch image. Please try again later.');
@@ -326,7 +306,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
             // Envoi de l'image dans le chat
             await conn.sendMessage(from, {
                 image: { url: imageUrl },
-                caption: 'Here is your anal NSFW image 🔞🔥.\n> © Gᴇɴᴇʀᴀᴛᴇᴅ ʙʏ Nᴀsᴛʏ SᴜʙZᴇʀᴏ😋🔥🔞.'
+                caption: 'Here is your anal NSFW image 🔞🔥.\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*😋🔥🔞.'
             }, { quoted: mek });
         } else {
             reply('❌ Unable to fetch image. Please try again later.');
@@ -360,7 +340,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
             // Envoi de l'image dans le chat
             await conn.sendMessage(from, {
                 image: { url: imageUrl },
-                caption: 'Here is your suspension NSFW image 🔞🔥.\n> © Gᴇɴᴇʀᴀᴛᴇᴅ ʙʏ Nᴀsᴛʏ SᴜʙZᴇʀᴏ😋🔥🔞.'
+                caption: 'Here is your suspension NSFW image 🔞🔥.\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*😋🔥🔞.'
             }, { quoted: mek });
         } else {
             reply('❌ Unable to fetch image. Please try again later.');
@@ -394,7 +374,7 @@ async (conn, mek, m, { from, l, quoted, body, isCmd, command, args, q, isGroup, 
             // Envoi de l'image dans le chat
             await conn.sendMessage(from, {
                 image: { url: imageUrl },
-                caption: 'Here is your kiss NSFW image 🔞💋.\n> © Gᴇɴᴇʀᴀᴛᴇᴅ ʙʏ Nᴀsᴛʏ SᴜʙZᴇʀᴏ😋💋🔞.'
+                caption: 'Here is your kiss NSFW image 🔞💋.\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*😋💋🔞.'
             }, { quoted: mek });
         } else {
             reply('❌ Unable to fetch image. Please try again later.');
