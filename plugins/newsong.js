@@ -43,7 +43,7 @@ cmd(commandDetails, async (bot, message, args, { from, q, reply, sender }) => {
 *2 |: AUDIO  DOC TYPE 📂*
 *3 |: AUDIO VOICE MODE 🎤*
 
-> *𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`;
+> *𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 🌟*`;
 
     const messageContext = {
       image: { url: video.thumbnail },
