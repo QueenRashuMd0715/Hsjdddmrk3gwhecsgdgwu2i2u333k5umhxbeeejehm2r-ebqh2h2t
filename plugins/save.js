@@ -10,12 +10,12 @@ const apilink = 'https://www.dark-yasiya-api.site'
 
 
 cmd({
-    pattern: "phub23",
-    //alias: ["ph","porndown","pornhub"],
+    pattern: "phub",
+    alias: ["ph","porndown","pornhub"],
     react: "🔞",
     desc: "Download pornhub.com porn video",
     category: "download",
-    use: '.phub < text >',
+    use: '.phub Sri Lanka',
     filename: __filename
 },
 async(conn, mek, m,{from, quoted, reply, q }) => {
@@ -32,12 +32,14 @@ const phub_info = await fetchJson(`${apilink}/download/phub?url=${phub_search.re
   
 const phubcaption =` 
 
-       🔥   *PORNHUB DOWNLOADER*   🔥
+*𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 PORN VIDEO DOWNLOADER 🔞*
 
      
 🔮 *Title* - ${phub_info.result.video_title}
 🔮 *Uploader* - ${phub_info.result.video_uploader}
 🔮 *Duration* - ${phub_info.result.analyze_time}
+
+> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*
 `
 await conn.sendMessage( from, { image: { url: phub_info.result.video_cover || '' }, caption: phubcaption }, { quoted: mek })
 
@@ -54,7 +56,7 @@ reply(error)
 
 
 cmd({
-    pattern: "apk78",
+    pattern: "apk1dhdhdxxnxjxushs",
     //alias: ["app","ps","playstore"],
     react: "🔞",
     desc: "Download App APK ",
@@ -97,7 +99,7 @@ reply(error)
 
 
 cmd({
-    pattern: "facebook34",
+    pattern: "faceboohdhdbsjsnsjsuwjdufk",
     //alias: ["fb"],
     react: "🔞",
     desc: "Download facebook video",
@@ -143,7 +145,7 @@ reply(error)
 
 
 cmd({
-    pattern: "song0715",
+    pattern: "song",
     desc: "download songs.",
     category: "download",
     react: "🎧",
@@ -161,7 +163,7 @@ const url = data.url
 const ytdl = await fetchJson(`${downlink}/ytmp3?url=${data.url}` + '&quality=3' )
     
 let message = `‎‎           
- 🎶 YT SONG DOWNLOADER 🎶
+*🎧𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 SONG DOWNLOADER 🎧*
 
 
  🎵 ‎Title: ${data.title}
@@ -169,11 +171,13 @@ let message = `‎‎
  🌏 Uploaded: ${data.ago}
  🧿 Views: ${data.views}
  🤵 Author: ${data.author.name}
- 📎 Url: ${data.url}`
+ 📎 Url: ${data.url}
+ 
+ > *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`
   
 await conn.sendMessage(from, { image: { url : data.thumbnail }, caption: message }, { quoted : mek })
 await conn.sendMessage(from,{audio: {url: ytdl.data.download },mimetype:"audio/mpeg"},{ quoted: mek })
-await conn.sendMessage(from,{document: {url: ytdl.data.download },mimetype:"audio/mpeg",fileName: data.title + ".mp3",caption:"> CYBER ESHU MD"},{ quoted: mek })
+await conn.sendMessage(from,{document: {url: ytdl.data.download },mimetype:"audio/mpeg",fileName: data.title + ".mp3",caption:"> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*"},{ quoted: mek })
 
                         
     
@@ -181,4 +185,6 @@ await conn.sendMessage(from,{document: {url: ytdl.data.download },mimetype:"audi
 console.log(e)
 reply(e)
 }
-});
+});    
+
+
