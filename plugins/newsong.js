@@ -35,10 +35,11 @@ const phubcaption =`
 *📍QUEEN RASHU MD PORNHUB 🔞*
 
      
-*TITEL :* _${phub_info.result.video_title}_
-*UPLOADER :* _${phub_info.result.video_uploader}_
-* DURATION :* _${phub_info.result.analyze_time}_
-`
+*🔞 TITEL :* _${phub_info.result.video_title}_
+*📩 UPLOADER :* _${phub_info.result.video_uploader}_
+*🔥 DURATION :* _${phub_info.result.analyze_time}_
+
+> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`
 await conn.sendMessage( from, { image: { url: phub_info.result.video_cover || '' }, caption: phubcaption }, { quoted: mek })
 
 // SEND 240P QUALITY VIDEO
@@ -162,22 +163,21 @@ const url = data.url
     
 const ytdl = await fetchJson(`${downlink}/ytmp3?url=${data.url}` + '&quality=3' )
     
-let message = `‎‎           
- 🎶 YT SONG DOWNLOADER 🎶
+let message = `‎‎*📍QUEEN RASHU MD SONG DOWNLOADER 🎧*
 
 
- 🎵 ‎Title: ${data.title}
- ⏱ Duration: ${data.timestamp}
- 🌏 Uploaded: ${data.ago}
- 🧿 Views: ${data.views}
- 🤵 Author: ${data.author.name}
- 📎 Url: ${data.url}
+ *🎵 ‎TITEL :* _${data.title}_
+ *⏱ DURATION :* _${data.timestamp}_
+ *🌏 UPLOADED :* _${data.ago}_
+ *🧿 VIEWS :* _${data.views}_
+ *🤵 AUTHOR :* _${data.author.name}_
+*📎 URL :* _${data.url}_
  
  > *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`
   
 await conn.sendMessage(from, { image: { url : data.thumbnail }, caption: message }, { quoted : mek })
 await conn.sendMessage(from,{audio: {url: ytdl.data.download },mimetype:"audio/mpeg"},{ quoted: mek })
-await conn.sendMessage(from,{document: {url: ytdl.data.download },mimetype:"audio/mpeg",fileName: data.title + ".mp3",caption:"> CYBER ESHU MD"},{ quoted: mek })
+await conn.sendMessage(from,{document: {url: ytdl.data.download },mimetype:"audio/mpeg",fileName: data.title + ".mp3",caption:"> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*"},{ quoted: mek })
 
                         
     
