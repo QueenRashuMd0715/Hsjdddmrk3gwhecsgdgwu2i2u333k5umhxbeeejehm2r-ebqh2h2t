@@ -1,88 +1,105 @@
-const SUPUN_API = `https://manu-ofc-api-site-6bfcbe0e18f6.herokuapp.com/ytmp3-dl-fixed?url=`
-
+const {cmd , commands} = require('../command')
+const fg = require('api-dylux')
+const yts = require('yt-search')
 cmd({
-    pattern: "song",
-    alias: ["audio"],
-    desc: 'Download Song / Video',
-    use: '.play Title',
-    react: "🎧",
-    category: 'download',
+    pattern: "play111",
+    desc: "To download songs.",
+    react: "🎵",
+    category: "download",
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-      
-        
-        if (!q) return reply('Please provide a title.');
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+if(!q) return reply("Please give me a url or title")  
+const search = await yts(q)
+const data = search.videos[0];
+const url = data.url
+    
+    
+let desc = `
+*🎶ESHU-MD MUSIC DOWNLOADING [⬇️]
 
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url = data.url;
+🎵 *MUSIC FOUND!* 
 
-        let desc = `
-  ℹ️ *SUPUN-MD* 
+➥ *Title:* ${data.title} 
+➥ *Duration:* ${data.timestamp} 
+➥ *Views:* ${data.views} 
+➥ *Uploaded On:* ${data.ago} 
+➥ *Link:* ${data.url} 
 
- *Title:* ${data.title} 
- *Duration:* ${data.timestamp}
- *Views:* ${data.views} 
- *Description:* ${data.description} 
- *Uploaded On:* ${data.ago} 
- © 𝙏𝙤 𝙙𝙤𝙬𝙣𝙡𝙤𝙖𝙙 𝙨𝙚𝙣𝙙: 🔢
+🎧 *ENJOY THE MUSIC BROUGHT TO YOU!*
 
- *➀*  ᴀᴜᴅɪᴏ ꜰɪʟᴇ 🎶
- *➁*  ᴅᴏᴄᴜᴍᴇɴᴛ ꜰɪʟᴇ 📂
+> *QUEEN ESHU-MD WHATSAPP BOT* 
 
-> ᴘᴀᴡᴇʀᴇᴅ ʙʏ ꜱᴜᴘᴜɴ ᴍᴅ
-        `;
+> *© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴇꜱʜᴀɴ👨‍💻* 
+`
 
-        const vv = await conn.sendMessage(from, { image: { url: data.thumbnail }, caption: desc }, { quoted: mek });
+await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
 
-        conn.ev.on('messages.upsert', async (msgUpdate) => {
-            const msg = msgUpdate.messages[0];
-            if (!msg.message || !msg.message.extendedTextMessage) return;
+//download audio
 
-            const selectedOption = msg.message.extendedTextMessage.text.trim();
+let down = await fg.yta(url)
+let downloadUrl = down.dl_url
 
-            if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
-                switch (selectedOption) {
-                    case '1':
-                        // Fetch Audio from SUPUN_API
-                        const audioData = await fetch(`${SUPUN_API}${data.url}`);
-                        const audioJson = await audioData.json();
-                        const audioDownloadUrl = audioJson.data[2].downloadUrl;  // Assuming you want 128kbps quality
+//send audio message
+await conn.sendMessage(from,{audio: {url:downloadUrl},mimetype:"audio/mpeg"},{quoted:mek})
+await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"audio/mpeg",fileName:data.title + ".mp3",caption:"*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴏʙɪᴀ ʙᴜᴛᴛ*"},{quoted:mek})
 
-                        // Send Audio
-                        await conn.sendMessage(from, { 
-                            audio: { url: audioDownloadUrl }, 
-                            mimetype: "audio/mpeg", 
-                            caption: "> ᴘᴀᴡᴇʀᴇᴅ ʙʏ ꜱᴜᴘᴜɴ ᴍᴅ" 
-                        }, { quoted: mek });
-                        break;
-       
-                    case '2':
-                        // Fetch Audio from SUPUN_API
-                        const docData = await fetch(`${SUPUN_API}${data.url}`);
-                        const docJson = await docData.json();
-                        const docDownloadUrl = docJson.data[2].downloadUrl;  // Assuming you want 128kbps quality
+}catch(e){
+console.log(e)
+  reply('${e}')
+}
+})
 
-                        // Send Document
-                        await conn.sendMessage(from, { 
-                            document: { url: docDownloadUrl },
-                            mimetype: "audio/mpeg", 
-                            fileName: `${data.title}.mp3`, 
-                            caption: "> ᴘᴀᴡᴇʀᴇᴅ ʙʏ ꜱᴜᴘᴜɴ ᴍᴅ" 
-                        }, { quoted: mek });
-                        break;
- 
-                    default:
-                        reply("Invalid option. Please select a valid option 💗");
-                }
-            }
-        });
+//====================video_dl=======================
 
-    } catch (e) {
-        console.error(e);
-        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-        reply('An error occurred while processing your request.');
-    }
-});
+cmd({
+    pattern: "darama111",
+    alias: ["video111"],
+    desc: "To download videos.",
+    react: "🎥",
+    category: "download",
+    filename: __filename
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+if(!q) return reply("Please give me a url or title")  
+const search = await yts(q)
+const data = search.videos[0];
+const url = data.url
+    
+    
+let desc = `
+*📽️ESHU-MD VIDEO DOWNLOADING [⬇️]
+
+🎥 *VIDEO FOUND!* 
+
+➥ *Title:* ${data.title} 
+➥ *Duration:* ${data.timestamp} 
+➥ *Views:* ${data.views} 
+➥ *Uploaded On:* ${data.ago} 
+➥ *Link:* ${data.url} 
+
+🎬 *ENJOY THE VIDEO BROUGHT TO YOU!*
+
+> *QUEEN ESHU-MD WHATSAPP BOT* 
+
+> *© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴇꜱʜᴀɴ👨‍💻*
+`
+
+await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
+
+//download video
+
+let down = await fg.ytv(url)
+let downloadUrl = down.dl_url
+
+//send video message
+await conn.sendMessage(from,{video: {url:downloadUrl},mimetype:"video/mp4"},{quoted:mek})
+await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"video/mp4",fileName:data.title + ".mp4",caption:"*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴏʙɪᴀ ʙᴜᴛᴛ*"},{quoted:mek})
+
+}catch(e){
+console.log(e)
+  reply('${e}')
+}
+})
