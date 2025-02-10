@@ -32,14 +32,12 @@ const phub_info = await fetchJson(`${apilink}/download/phub?url=${phub_search.re
   
 const phubcaption =` 
 
-*𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 POR VIDEO DOWNLOADER 🔞*
+*QUEEN RASHU PORN VIDEO DOWNLOADER 🔞*
 
      
 📍 *TITEL :* ${phub_info.result.video_title}
 📍 *DURATION :* ${phub_info.result.analyze_time}
 📍 *UPLOADER :* - ${phub_info.result.video_uploader}
-
-> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*
 `
 await conn.sendMessage( from, { image: { url: phub_info.result.video_cover || '' }, caption: phubcaption }, { quoted: mek })
 
