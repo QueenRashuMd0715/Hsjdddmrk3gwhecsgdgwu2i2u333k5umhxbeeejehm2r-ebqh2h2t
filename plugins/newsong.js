@@ -4,9 +4,9 @@ const axios = require("axios");
 const { fetchJson } = require("../lib/functions");
 
 const commandDetails = {
-  pattern: "song1",
+  pattern: "song",
   desc: "Download Song",
-  react: "🎵",
+  react: "🎧",
   use: ".song <YouTube URL>",
   category: "download",
   filename: __filename,
@@ -52,7 +52,7 @@ cmd(commandDetails, async (bot, message, args, { from, q, reply, sender }) => {
 
     const initialMessage = await bot.sendMessage(from, messageContext, { quoted: message });
 
-    const fetchAudio = await fetchJson(`https://dark-shan-yt.koyeb.app/download/ytmp3?url=${videoUrl}`);
+    const fetchAudio = await fetchJson(`https://manu-ofc-api-site-6bfcbe0e18f6.herokuapp.com/ytmp3-dl-fixed?url=${videoUrl}`);
     if (!fetchAudio || !fetchAudio.data || !fetchAudio.data.download) {
       return reply("❌ Error fetching download link. Try again later. ❌");
     }
