@@ -1,4 +1,4 @@
-// CODED BY KALIYA-X
+// CODED BY QUEEN RASHU MD
 
 
 const { cmd } = require('../command')
@@ -32,12 +32,12 @@ const phub_info = await fetchJson(`${apilink}/download/phub?url=${phub_search.re
   
 const phubcaption =` 
 
-*QUEEN RASHU PORN VIDEO DOWNLOADER 🔞*
+*📍QUEEN RASHU MD PORNHUB 🔞*
 
      
-📍 *TITEL :* ${phub_info.result.video_title}
-📍 *DURATION :* ${phub_info.result.analyze_time}
-📍 *UPLOADER :* - ${phub_info.result.video_uploader}
+*TITEL :* _${phub_info.result.video_title}_
+*UPLOADER :* _${phub_info.result.video_uploader}_
+* DURATION :* _${phub_info.result.analyze_time}_
 `
 await conn.sendMessage( from, { image: { url: phub_info.result.video_cover || '' }, caption: phubcaption }, { quoted: mek })
 
@@ -54,9 +54,9 @@ reply(error)
 
 
 cmd({
-    pattern: "apk23479593",
-    //alias: ["app","ps","playstore"],
-    react: "🔞",
+    pattern: "apk1",
+    alias: ["app1","ps1","playstore"],
+    react: "📩",
     desc: "Download App APK ",
     category: "download",
     use: '.apk < text >',
@@ -76,12 +76,14 @@ const apk_info = await fetchJson(`${apilink}/download/apk?id=${apk_search.result
   
 const apkcaption =` 
 
-       🔥   *APK DOWNLOADER*   🔥
+*QUEEN RASHU MD APK DOWNLOADER 📩*
 
      
-🔮 *Name* - ${apk_info.result.name}
-🔮 *Package* - ${apk_info.result.package}
-🔮 *Size* - ${apk_info.result.size}
+*🔥 NAME :* _${apk_info.result.name}_
+*🔥 PAKAGE :* _${apk_info.result.package}_
+*🔥 SIZE :* _${apk_info.result.size}_
+
+> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*
 `
 await conn.sendMessage( from, { image: { url: apk_info.result.image || '' }, caption: apkcaption }, { quoted: mek })
 
@@ -97,8 +99,8 @@ reply(error)
 
 
 cmd({
-    pattern: "fac363526",
-    alias: ["fb4252"],
+    pattern: "facebook1DJXJXJXBXHXJXMDJDJ",
+    //alias: ["fb"],
     react: "🔞",
     desc: "Download facebook video",
     category: "download",
@@ -169,7 +171,9 @@ let message = `‎‎
  🌏 Uploaded: ${data.ago}
  🧿 Views: ${data.views}
  🤵 Author: ${data.author.name}
- 📎 Url: ${data.url}`
+ 📎 Url: ${data.url}
+ 
+ > *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`
   
 await conn.sendMessage(from, { image: { url : data.thumbnail }, caption: message }, { quoted : mek })
 await conn.sendMessage(from,{audio: {url: ytdl.data.download },mimetype:"audio/mpeg"},{ quoted: mek })
