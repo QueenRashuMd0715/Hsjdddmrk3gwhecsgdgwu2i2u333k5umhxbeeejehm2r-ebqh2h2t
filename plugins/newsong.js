@@ -1,105 +1,143 @@
-const {cmd , commands} = require('../command')
-const fg = require('api-dylux')
-const yts = require('yt-search')
-cmd({
-    pattern: "play111",
-    desc: "To download songs.",
-    react: "🎵",
-    category: "download",
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("Please give me a url or title")  
-const search = await yts(q)
-const data = search.videos[0];
-const url = data.url
-    
-    
-let desc = `
-*🎶ESHU-MD MUSIC DOWNLOADING [⬇️]
+const {
+  cmd,
+  commands
+} = require("../command");
+const yts = require("yt-search");
+const axios = require("axios");
+const {
+  fetchJson,
+  getBuffer
+} = require("../lib/functions");
 
-🎵 *MUSIC FOUND!* 
+const commandDetails = {
+  pattern: "song",
+  desc: "Download Song",
+  react: "🎵",
+  use: ".song <YouTube URL>",
+  category: "download",
+  filename: __filename,
+};
 
-➥ *Title:* ${data.title} 
-➥ *Duration:* ${data.timestamp} 
-➥ *Views:* ${data.views} 
-➥ *Uploaded On:* ${data.ago} 
-➥ *Link:* ${data.url} 
+cmd(commandDetails, async (bot, message, args, { from, q, reply, sender }) => {
+  try {
+    if (!q) {
+      return reply("❌ Please provide a title. ❌");
+    }
 
-🎧 *ENJOY THE MUSIC BROUGHT TO YOU!*
+    const searchResults = await yts(q);
+    const video = searchResults.videos[0];
+    const videoUrl = video.url;
+    const videoTitle = video.title.length > 20 ? video.title.substring(0, 20) + "..." : video.title;
 
-> *QUEEN ESHU-MD WHATSAPP BOT* 
+    const downloadMessage = `*╭╼╼╼╼╼╼╼╼ ● 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ● ╼╼╼╼╼╼╼╼╮*
+     
+* *QUEEN RASHU MD SONG DAWNLODER🎧*
 
-> *© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴇꜱʜᴀɴ👨‍💻* 
-`
+*╭╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*
+*│* Song Name : ${videoTitle}
+*╰╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*
 
-await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
+* *Reply Required Format 👇*
 
-//download audio
+*✵ ╼╼╼╼╼( ʀᴀꜱʜᴜ )╼╼╼╼╼ ✵*
 
-let down = await fg.yta(url)
-let downloadUrl = down.dl_url
+*1 |: AUDIO  MP3 TYPE 🎶*
+*2 |: AUDIO  DOC TYPE 📂*
+*3 |: AUDIO VOICE MODE 🎤*
 
-//send audio message
-await conn.sendMessage(from,{audio: {url:downloadUrl},mimetype:"audio/mpeg"},{quoted:mek})
-await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"audio/mpeg",fileName:data.title + ".mp3",caption:"*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴏʙɪᴀ ʙᴜᴛᴛ*"},{quoted:mek})
+> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`;
 
-}catch(e){
-console.log(e)
-  reply('${e}')
-}
-})
+    const axiosOptions = { responseType: "arraybuffer" };
+    const thumbnailImage = Buffer.from(
+      (await axios.get("https://i.ibb.co/g98HkMY/8188.jpg", axiosOptions)).data,
+      "binary"
+    );
 
-//====================video_dl=======================
+    const messageContext = {
+      image: { url: video.thumbnail || "https://i.ibb.co/g98HkMY/8188.jpg" },
+      caption: downloadMessage,
+      contextInfo: {
+        mentionedJid: [sender],
+        externalAdReply: {
+          showAdAttribution: true,
+          containsAutoReply: true,
+          title: "QUEEN RASHU MD",
+          body: "© 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐕1",
+          previewType: "PHOTO",
+          thumbnail: thumbnailImage,
+          sourceUrl: "https://whatsapp.com/channel/0029Vb2GOyk6rsQwJSBa7T2h",
+          mediaType: 1,
+        },
+      },
+    };
 
-cmd({
-    pattern: "darama111",
-    alias: ["video111"],
-    desc: "To download videos.",
-    react: "🎥",
-    category: "download",
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("Please give me a url or title")  
-const search = await yts(q)
-const data = search.videos[0];
-const url = data.url
-    
-    
-let desc = `
-*📽️ESHU-MD VIDEO DOWNLOADING [⬇️]
+    const fetchAudio = await fetchJson(`https://dark-shan-yt.koyeb.app/download/ytmp3?url=${videoUrl}`);
+    const downloadLink = fetchAudio.data.download;
 
-🎥 *VIDEO FOUND!* 
+    const initialMessage = await bot.sendMessage(from, messageContext, { quoted: message });
 
-➥ *Title:* ${data.title} 
-➥ *Duration:* ${data.timestamp} 
-➥ *Views:* ${data.views} 
-➥ *Uploaded On:* ${data.ago} 
-➥ *Link:* ${data.url} 
+    bot.ev.on("messages.upsert", async (newMessageEvent) => {
+      const newMessage = newMessageEvent.messages[0];
 
-🎬 *ENJOY THE VIDEO BROUGHT TO YOU!*
+      if (!newMessage.message || !newMessage.message.extendedTextMessage) {
+        return;
+      }
 
-> *QUEEN ESHU-MD WHATSAPP BOT* 
+      const userResponse = newMessage.message.extendedTextMessage.text.trim();
+      const contextInfo = newMessage.message.extendedTextMessage.contextInfo;
 
-> *© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴇꜱʜᴀɴ👨‍💻*
-`
+      if (contextInfo && contextInfo.stanzaId === initialMessage.key.id) {
+        try {
+          switch (userResponse) {
+            case "1":
+              await bot.sendMessage(
+                from,
+                {
+                  audio: { url: downloadLink },
+                  mimetype: "audio/mpeg",
+                  fileName: `${video.title}.mp3`,
+                  caption: "> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*",
+                },
+                { quoted: newMessage }
+              );
+              break;
 
-await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
+            case "2":
+              await bot.sendMessage(
+                from,
+                {
+                  document: { url: downloadLink },
+                  mimetype: "audio/mpeg",
+                  fileName: `${video.title}.mp3`,
+                  caption: "> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*",
+                },
+                { quoted: newMessage }
+              );
+              break;
 
-//download video
+            case "3":
+              await bot.sendMessage(
+                from,
+                {
+                  audio: { url: downloadLink },
+                  mimetype: "audio/mpeg",
+                  ptt: true,
+                },
+                { quoted: newMessage }
+              );
+              break;
 
-let down = await fg.ytv(url)
-let downloadUrl = down.dl_url
-
-//send video message
-await conn.sendMessage(from,{video: {url:downloadUrl},mimetype:"video/mp4"},{quoted:mek})
-await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"video/mp4",fileName:data.title + ".mp4",caption:"*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴏʙɪᴀ ʙᴜᴛᴛ*"},{quoted:mek})
-
-}catch(e){
-console.log(e)
-  reply('${e}')
-}
-})
+            default:
+              reply("❌ Invalid option. Please select a valid option (1, 2, or 3) 🔴");
+          }
+        } catch (error) {
+          console.error(error);
+          reply(`❌ Error: ${error.message} ❌`);
+        }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    reply(`❌ Error: ${error.message} ❌`);
+  }
+});
