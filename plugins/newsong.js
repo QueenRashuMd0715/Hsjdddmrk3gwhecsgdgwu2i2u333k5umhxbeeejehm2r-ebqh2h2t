@@ -84,7 +84,7 @@ const apkcaption =`
 *🔥 PAKAGE :* _${apk_info.result.package}_
 *🔥 SIZE :* _${apk_info.result.size}_
 
-> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*
+> *QUEEN RASHU MD*
 `
 await conn.sendMessage( from, { image: { url: apk_info.result.image || '' }, caption: apkcaption }, { quoted: mek })
 
