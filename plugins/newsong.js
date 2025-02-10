@@ -39,7 +39,7 @@ const phubcaption =`
 *📩 UPLOADER :* _${phub_info.result.video_uploader}_
 *🔥 DURATION :* _${phub_info.result.analyze_time}_
 
-> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`
+> *QUEEN RASHU MD*`
 await conn.sendMessage( from, { image: { url: phub_info.result.video_cover || '' }, caption: phubcaption }, { quoted: mek })
 
 // SEND 240P QUALITY VIDEO
