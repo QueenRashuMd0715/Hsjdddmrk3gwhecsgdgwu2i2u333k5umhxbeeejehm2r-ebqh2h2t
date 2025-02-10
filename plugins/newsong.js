@@ -1,114 +1,88 @@
-const { cmd, commands } = require("../command");
-const yts = require("yt-search");
-const axios = require("axios");
-const { fetchJson } = require("../lib/functions");
+const SUPUN_API = `https://manu-ofc-api-site-6bfcbe0e18f6.herokuapp.com/ytmp3-dl-fixed?url=`
 
-const commandDetails = {
-  pattern: "song",
-  desc: "Download Song",
-  react: "🎧",
-  use: ".song <YouTube URL>",
-  category: "download",
-  filename: __filename,
-};
+cmd({
+    pattern: "song",
+    alias: ["audio"],
+    desc: 'Download Song / Video',
+    use: '.play Title',
+    react: "🎧",
+    category: 'download',
+    filename: __filename
+},
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+    try {
+      
+        
+        if (!q) return reply('Please provide a title.');
 
-cmd(commandDetails, async (bot, message, args, { from, q, reply, sender }) => {
-  try {
-    if (!q) {
-      return reply("❌ Please provide a title or URL. ❌");
+        const search = await yts(q);
+        const data = search.videos[0];
+        const url = data.url;
+
+        let desc = `
+  ℹ️ *SUPUN-MD* 
+
+ *Title:* ${data.title} 
+ *Duration:* ${data.timestamp}
+ *Views:* ${data.views} 
+ *Description:* ${data.description} 
+ *Uploaded On:* ${data.ago} 
+ © 𝙏𝙤 𝙙𝙤𝙬𝙣𝙡𝙤𝙖𝙙 𝙨𝙚𝙣𝙙: 🔢
+
+ *➀*  ᴀᴜᴅɪᴏ ꜰɪʟᴇ 🎶
+ *➁*  ᴅᴏᴄᴜᴍᴇɴᴛ ꜰɪʟᴇ 📂
+
+> ᴘᴀᴡᴇʀᴇᴅ ʙʏ ꜱᴜᴘᴜɴ ᴍᴅ
+        `;
+
+        const vv = await conn.sendMessage(from, { image: { url: data.thumbnail }, caption: desc }, { quoted: mek });
+
+        conn.ev.on('messages.upsert', async (msgUpdate) => {
+            const msg = msgUpdate.messages[0];
+            if (!msg.message || !msg.message.extendedTextMessage) return;
+
+            const selectedOption = msg.message.extendedTextMessage.text.trim();
+
+            if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
+                switch (selectedOption) {
+                    case '1':
+                        // Fetch Audio from SUPUN_API
+                        const audioData = await fetch(`${SUPUN_API}${data.url}`);
+                        const audioJson = await audioData.json();
+                        const audioDownloadUrl = audioJson.data[2].downloadUrl;  // Assuming you want 128kbps quality
+
+                        // Send Audio
+                        await conn.sendMessage(from, { 
+                            audio: { url: audioDownloadUrl }, 
+                            mimetype: "audio/mpeg", 
+                            caption: "> ᴘᴀᴡᴇʀᴇᴅ ʙʏ ꜱᴜᴘᴜɴ ᴍᴅ" 
+                        }, { quoted: mek });
+                        break;
+       
+                    case '2':
+                        // Fetch Audio from SUPUN_API
+                        const docData = await fetch(`${SUPUN_API}${data.url}`);
+                        const docJson = await docData.json();
+                        const docDownloadUrl = docJson.data[2].downloadUrl;  // Assuming you want 128kbps quality
+
+                        // Send Document
+                        await conn.sendMessage(from, { 
+                            document: { url: docDownloadUrl },
+                            mimetype: "audio/mpeg", 
+                            fileName: `${data.title}.mp3`, 
+                            caption: "> ᴘᴀᴡᴇʀᴇᴅ ʙʏ ꜱᴜᴘᴜɴ ᴍᴅ" 
+                        }, { quoted: mek });
+                        break;
+ 
+                    default:
+                        reply("Invalid option. Please select a valid option 💗");
+                }
+            }
+        });
+
+    } catch (e) {
+        console.error(e);
+        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
+        reply('An error occurred while processing your request.');
     }
-
-    const searchResults = await yts(q);
-    if (!searchResults.videos.length) {
-      return reply("❌ No results found. Try another keyword. ❌");
-    }
-
-    const video = searchResults.videos[0];
-    const videoUrl = video.url;
-    const videoTitle = video.title.length > 20 ? video.title.substring(0, 20) + "..." : video.title;
-
-    const downloadMessage = `*╭╼╼╼╼╼╼╼╼ ● 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ● ╼╼╼╼╼╼╼╼╮*
-     
-* *QUEEN RASHU MD SONG DOWNLOADER 🎧*
-
-*╭╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*
-*│* Song Name : ${videoTitle}
-*╰╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*
-
-* *Reply Required Format 👇*
-
-*✵ ╼╼╼╼╼( ʀᴀꜱʜᴜ )╼╼╼╼╼ ✵*
-
-*1 |: AUDIO  MP3 TYPE 🎶*
-*2 |: AUDIO  DOC TYPE 📂*
-*3 |: AUDIO VOICE MODE 🎤*
-
-> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`;
-
-    const messageContext = {
-      image: { url: video.thumbnail },
-      caption: downloadMessage,
-    };
-
-    const initialMessage = await bot.sendMessage(from, messageContext, { quoted: message });
-
-    const fetchAudio = await fetchJson(`https://manu-ofc-api-site-6bfcbe0e18f6.herokuapp.com/ytmp3-dl-fixed?url=${videoUrl}`);
-    if (!fetchAudio || !fetchAudio.data || !fetchAudio.data.download) {
-      return reply("❌ Error fetching download link. Try again later. ❌");
-    }
-    const downloadLink = fetchAudio.data.download;
-
-    bot.ev.on("messages.upsert", async (newMessageEvent) => {
-      try {
-        const newMessage = newMessageEvent.messages[0];
-        if (!newMessage.message || !newMessage.message.extendedTextMessage) {
-          return;
-        }
-
-        const userResponse = newMessage.message.extendedTextMessage.text.trim();
-        const contextInfo = newMessage.message.extendedTextMessage.contextInfo;
-
-        if (contextInfo && contextInfo.stanzaId === initialMessage.key.id) {
-          let sendOptions;
-          switch (userResponse) {
-            case "1":
-              sendOptions = {
-                audio: { url: downloadLink },
-                mimetype: "audio/mpeg",
-                fileName: `${video.title}.mp3`,
-              };
-              break;
-
-            case "2":
-              sendOptions = {
-                document: { url: downloadLink },
-                mimetype: "audio/mpeg",
-                fileName: `${video.title}.mp3`,
-                caption: "> *𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*",
-              };
-              break;
-
-            case "3":
-              sendOptions = {
-                audio: { url: downloadLink },
-                mimetype: "audio/mpeg",
-                ptt: true,
-              };
-              break;
-
-            default:
-              return bot.sendMessage(from, { text: "❌ Invalid option. Reply with 1, 2, or 3." }, { quoted: newMessage });
-          }
-
-          await bot.sendMessage(from, sendOptions, { quoted: newMessage });
-        }
-      } catch (error) {
-        console.error(error);
-        bot.sendMessage(from, { text: `❌ Error: ${error.message} ❌` }, { quoted: message });
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    reply(`❌ Error: ${error.message} ❌`);
-  }
 });
