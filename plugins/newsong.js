@@ -4,7 +4,7 @@ const axios = require("axios");
 const { fetchJson } = require("../lib/functions");
 
 const commandDetails = {
-  pattern: "song",
+  pattern: "song1",
   desc: "Download Song",
   react: "🎵",
   use: ".song <YouTube URL>",
