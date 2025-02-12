@@ -1298,7 +1298,7 @@ cmd({
  const sentMenuMessage = await bot.sendMessage(
   from,
   {
-    image: { url: "https://i.ibb.co/BsjkCDP/9555.jpg" },
+    image: { url: "https://i.ibb.co/gZv1pgXN/6563.jpg" },
     caption: menuText,
     contextInfo: {
       mentionedJid: [],
@@ -1614,7 +1614,7 @@ if (isReplyToMenu) {
     await bot.sendMessage(
   from,
   {
-    image: { url: "https://i.ibb.co/BsjkCDP/9555.jpg" },
+    image: { url: "https://i.ibb.co/gZv1pgXN/6563.jpg" },
     caption: response.imageCaption,
     contextInfo: {
       mentionedJid: [],
