@@ -10,7 +10,7 @@ const {
 } = require("../lib/functions");
 
 const commandDetails = {
-  pattern: "song1119",
+  pattern: "song",
   desc: "Download Song",
   react: "🎵",
   use: ".song <YouTube URL>",
@@ -71,7 +71,7 @@ cmd(commandDetails, async (bot, message, args, { from, q, reply, sender }) => {
       },
     };
 
-    const fetchAudio = await fetchJson(`https://movie.asitha.us.kg/api/song/mp3?url=https://youtube.com/watch?v=ExQRQolm-MI`);
+    const fetchAudio = await fetchJson(`https://movie.asitha.us.kg/api/song/mp3?url=${videoUrl}`);
     const downloadLink = fetchAudio.data.download;
 
     const initialMessage = await bot.sendMessage(from, messageContext, { quoted: message });
