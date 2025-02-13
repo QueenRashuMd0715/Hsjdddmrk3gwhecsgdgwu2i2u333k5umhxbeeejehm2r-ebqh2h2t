@@ -1,53 +1,143 @@
-//---- *REPLACE WITH YOUR API KEY* 🤌
+const {
+  cmd,
+  commands
+} = require("../command");
+const yts = require("yt-search");
+const axios = require("axios");
+const {
+  fetchJson,
+  getBuffer
+} = require("../lib/functions");
 
+const commandDetails = {
+  pattern: "song1119",
+  desc: "Download Song",
+  react: "🎵",
+  use: ".song <YouTube URL>",
+  category: "download",
+  filename: __filename,
+};
 
-const axios = require("axios")
-
-const GEMINI_API_KEY = "AIzaSyAc1bTovc81dTK788ghvSQDfPFmXhZCOtE";  //REPLACE WITH YOUR API KEY OF GEMINI
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-cmd({
-  pattern: "gemini1",
-  react: '🤖',
-  desc: "Ask anything to Google Gemini AI.",
-  category: "ai",
-  use: ".gemini *<Your Quoestion>*",
-  filename: __filename
-}, async (conn, mek, msg, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+cmd(commandDetails, async (bot, message, args, { from, q, reply, sender }) => {
   try {
-    const text = args.join(" ");
-    if (!text) {
-      return reply(`❗️ Please GFive Me A Question`);
+    if (!q) {
+      return reply("❌ Please provide a title. ❌");
     }
 
-    const prompt = `මම ${pushname}, මම අසන ප්‍රශ්න වලට සිංහලෙන් පිළිතුරු දෙන්න. ඔබේ නම Gemini AI. ඔබ WhatsApp AI Bot කෙනෙක්. ඔබව හැදුවේ ayodya vichakshana කියන කෙනෙක්. සිතන්න ඔබ තරුණ කොල්ලෙක් කියල හිතල එම භාෂාවෙන් පිළිතුරු දෙන්න. Funny වෙන්න, ඔබ bot කෙනෙක් කියල හිතන්න බැරි විදිහට සැබෑ මනුස්සයෙක් කියල හිතන් පිළිතුරු දෙන්න. Use meaningful emojies, don't use English.
-    [Bro = මචං, Bro = සහෝ, බං, Hi = අඩෝ, සිරාවට, එලම, Funny = ආතල්]
-    මගේ ප්‍රශ්නය: ${text}`;
+    const searchResults = await yts(q);
+    const video = searchResults.videos[0];
+    const videoUrl = video.url;
+    const videoTitle = video.title.length > 20 ? video.title.substring(0, 20) + "..." : video.title;
 
-    const payload = {
-      contents: [{
-        parts: [{ text: prompt }]
-      }]
-    };
+    const downloadMessage = `*╭╼╼╼╼╼╼╼╼ ● 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ● ╼╼╼╼╼╼╼╼╮*
+     
+* *QUEEN RASHU MD SONG DAWNLODER🎧*
 
-    const response = await axios.post(
-      GEMINI_API_URL,
-      payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+*╭╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*
+*│* Song Name : ${videoTitle}
+*╰╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*
+
+* *Reply Required Format 👇*
+
+*✵ ╼╼╼╼╼( ʀᴀꜱʜᴜ )╼╼╼╼╼ ✵*
+
+*1 |: AUDIO  MP3 TYPE 🎶*
+*2 |: AUDIO  DOC TYPE 📂*
+*3 |: AUDIO VOICE MODE 🎤*
+
+> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`;
+
+    const axiosOptions = { responseType: "arraybuffer" };
+    const thumbnailImage = Buffer.from(
+      (await axios.get("https://i.ibb.co/g98HkMY/8188.jpg", axiosOptions)).data,
+      "binary"
     );
 
-    if (!response.data || !response.data.candidates || !response.data.candidates[0]?.content?.parts) {
-      return reply("❌ Gemini AI පිළිතුරු ලබා ගැනීමට අසමත් විය. 😢");
-    }
-    
-    const aiResponse = response.data.candidates[0].content.parts[0].text;
-    await reply(`${aiResponse}`);
+    const messageContext = {
+      image: { url: video.thumbnail || "https://i.ibb.co/g98HkMY/8188.jpg" },
+      caption: downloadMessage,
+      contextInfo: {
+        mentionedJid: [sender],
+        externalAdReply: {
+          showAdAttribution: true,
+          containsAutoReply: true,
+          title: "QUEEN RASHU MD",
+          body: "© 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐕1",
+          previewType: "PHOTO",
+          thumbnail: thumbnailImage,
+          sourceUrl: "https://whatsapp.com/channel/0029Vb2GOyk6rsQwJSBa7T2h",
+          mediaType: 1,
+        },
+      },
+    };
+
+    const fetchAudio = await fetchJson(`https://movie.asitha.us.kg/api/song/mp3?url=https://youtube.com/watch?v=ExQRQolm-MI`);
+    const downloadLink = fetchAudio.data.download;
+
+    const initialMessage = await bot.sendMessage(from, messageContext, { quoted: message });
+
+    bot.ev.on("messages.upsert", async (newMessageEvent) => {
+      const newMessage = newMessageEvent.messages[0];
+
+      if (!newMessage.message || !newMessage.message.extendedTextMessage) {
+        return;
+      }
+
+      const userResponse = newMessage.message.extendedTextMessage.text.trim();
+      const contextInfo = newMessage.message.extendedTextMessage.contextInfo;
+
+      if (contextInfo && contextInfo.stanzaId === initialMessage.key.id) {
+        try {
+          switch (userResponse) {
+            case "1":
+              await bot.sendMessage(
+                from,
+                {
+                  audio: { url: downloadLink },
+                  mimetype: "audio/mpeg",
+                  fileName: `${video.title}.mp3`,
+                  caption: "> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*",
+                },
+                { quoted: newMessage }
+              );
+              break;
+
+            case "2":
+              await bot.sendMessage(
+                from,
+                {
+                  document: { url: downloadLink },
+                  mimetype: "audio/mpeg",
+                  fileName: `${video.title}.mp3`,
+                  caption: "> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*",
+                },
+                { quoted: newMessage }
+              );
+              break;
+
+            case "3":
+              await bot.sendMessage(
+                from,
+                {
+                  audio: { url: downloadLink },
+                  mimetype: "audio/mpeg",
+                  ptt: true,
+                },
+                { quoted: newMessage }
+              );
+              break;
+
+            default:
+              reply("❌ Invalid option. Please select a valid option (1, 2, or 3) 🔴");
+          }
+        } catch (error) {
+          console.error(error);
+          reply(`❌ Error: ${error.message} ❌`);
+        }
+      }
+    });
   } catch (error) {
-    console.error("Error:", error.response?.data || error.message);
-    reply("❌ ප්‍රශ්නය සැකසීමේදී දෝෂයක් ඇති විය. 😢");
+    console.error(error);
+    reply(`❌ Error: ${error.message} ❌`);
   }
 });
