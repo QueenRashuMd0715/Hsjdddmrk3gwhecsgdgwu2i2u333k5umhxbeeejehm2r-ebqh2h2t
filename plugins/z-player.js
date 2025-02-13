@@ -72,7 +72,7 @@ cmd(commandDetails, async (bot, message, args, { from, q, reply, sender }) => {
     };
 
     const fetchAudio = await fetchJson(`https://movie.asitha.us.kg/api/song/mp3?url=${videoUrl}`);
-    const downloadLink = fetchAudio.data.url;
+    const downloadLink = fetchAudio.download.url;
 
     const initialMessage = await bot.sendMessage(from, messageContext, { quoted: message });
 
