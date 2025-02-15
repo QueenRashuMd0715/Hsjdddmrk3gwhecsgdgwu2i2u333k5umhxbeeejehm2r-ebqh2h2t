@@ -146,7 +146,7 @@ reply(error)
 
 
 cmd({
-    pattern: "audio",
+    pattern: "song",
     desc: "download songs.",
     category: "download",
     react: "🎧",
