@@ -51,6 +51,11 @@ cmd(commandDetails, async (bot, message, args, { from, q, reply, sender }) => {
     const thumbnailImage = Buffer.from(
       (await axios.get("https://i.ibb.co/g98HkMY/8188.jpg", axiosOptions)).data,
       "binary"
+    );
+
+    const messageContext = {
+      image: { url: video.thumbnail || "https://i.ibb.co/g98HkMY/8188.jpg" },
+      caption: downloadMessage,
     };
 
     const fetchAudio = await fetchJson(`https://movie.asitha.us.kg/api/song/mp3?url=${videoUrl}`);
