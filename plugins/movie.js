@@ -1,184 +1,167 @@
-const { PixaldrainDL } = require("pixaldrain-sinhalasub");
+const { 
+    BufferJSON, 
+    WA_DEFAULT_EPHEMERAL, 
+    generateWAMessageFromContent, 
+    proto, 
+    generateWAMessageContent, 
+    generateWAMessage, 
+    prepareWAMessageMedia, 
+    downloadContentFromMessage, 
+    areJidsSameUser, 
+    getContentType 
+} = require('@whiskeysockets/baileys');
+
+const { cmd } = require('../command');
+const { updateEnv, readEnv } = require('../lib/database');
+const config = require("../config");
 
 cmd({
-    pattern: "sinhalasub1",
-    desc: "Search for a movie and get details and download options.",
-    alias: ["sinhalasubdl"],
-    category: "movie",
-    react: "🍿",
+    pattern: "alive1",
+    desc: "Bot Settings Configuration",
+    react: "👋",
+    category: "owner",
     filename: __filename
-}, async (conn, mek, m, { from, q, reply }) => {
+},
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        const input = q.trim();
-        if (!input) return reply("Please provide a movie name to search.");
-       
-        const result = await SinhalaSub.get_list.by_search(input);
-        if (!result.status || result.results.length === 0) return reply("No results found.");
+        const currentConfig = await readEnv();
 
-        let message = "📺 Search Results for\n\n*🔢 Reply Below Number*\n\n";
-        result.results.forEach((item, index) => {
-            message += `${index + 1}. *${item.title}*\n🗓️Type : *${item.type}*\n📎 Link : ${item.link}\n\n`;
+        async function createImage(url) {
+            const { imageMessage } = await generateWAMessageContent({
+                image: { url }
+            }, {
+                upload: conn.waUploadToServer
+            });
+            return imageMessage;
+        }
+
+        const settingsDetails = [{
+            body: proto.Message.InteractiveMessage.Body.create({
+                text: `᮰ 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ᮰`
+            }),
+            footer: proto.Message.InteractiveMessage.Footer.create({
+                text: config.FOOTER
+            }),
+            header: proto.Message.InteractiveMessage.Header.create({
+                title: `👋 Hello ${pushname}!\n\n*I AM ALIVE NOW*\n\n> *𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`,
+                hasMediaAttachment: true,
+                imageMessage: await createImage('https://i.ibb.co/g98HkMY/8188.jpg')
+            }),
+            nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                buttons: [
+                    {
+                        "name": "cta_url",
+                        "buttonParamsJson": JSON.stringify({
+                            "display_text": "♤ 𝐎𝐖𝐍𝐄𝐑 ♤",
+                            "url": "https://wa.me/94727319036"
+                        })
+                    },
+                    {
+                        "name": "cta_url",
+                        "buttonParamsJson": JSON.stringify({
+                            "display_text": "♤ 𝐂𝐇𝐀𝐍𝐍𝐄𝐋 ♤",
+                            "url": "https://whatsapp.com/channel/0029Vb2GOyk6rsQwJSBa7T2h"
+                        })
+                    },
+                    {
+                        "name": "cta_url",
+                        "buttonParamsJson": JSON.stringify({
+                            "display_text": "♤ 𝐁𝐎𝐓 𝐆𝐑𝐎𝐔𝐏 ♤",
+                            "url": "https://chat.whatsapp.com/F3ZWEVVfOkf9tGAF4J9pDI"
+                        })
+                    },
+                    {
+                        "name": "cta_url",
+                        "buttonParamsJson": JSON.stringify({
+                            "display_text": "♤ 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 ♤",
+                            "url": "https://youtube.com/@rashumodz_0715?si=5pg_wumwy6VzizMP"
+                        })
+                    },
+                    {
+                        "name": "cta_url",
+                        "buttonParamsJson": JSON.stringify({
+                            "display_text": "♤ 𝐁𝐎𝐓 𝐖𝐄𝐁 ♤",
+                            "url": "https://queen-rashu-sesion-7bdf00f2fa51.herokuapp.com/"
+                        })
+                    }
+                ]
+            })
+        }];
+
+        const msg = generateWAMessageFromContent(from, {
+            viewOnceMessage: {
+                message: {
+                    interactiveMessage: proto.Message.InteractiveMessage.create({
+                        body: proto.Message.InteractiveMessage.Body.create({
+                            text: 'Bot Settings Configuration\n\nSelect an option to modify'
+                        }),
+                        footer: proto.Message.InteractiveMessage.Footer.create({
+                            text: config.FOOTER
+                        }),
+                        header: proto.Message.InteractiveMessage.Header.create({
+                            hasMediaAttachment: false
+                        }),
+                        carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.create({
+                            cards: settingsDetails
+                        })
+                    })
+                }
+            }
+        }, {});
+
+        await conn.relayMessage(from, msg.message, {
+            messageId: msg.key.id
         });
 
-        const sentMsg = await conn.sendMessage(from, {
-            image: { url: 'https://i.ibb.co/bHXBV08/9242c844b83f7bf9.jpg' },
-            caption: message,
-            contextInfo: {
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterName: '𝐒𝐔𝐏𝐔𝐍 𝐌𝐃',
-                    newsletterJid: "120363270086174844@newsletter",
-                },
-                externalAdReply: {
-                    title: '𝐒𝐔𝐏𝐔𝐍 𝐌𝐃',
-                    body: '',
-                    mediaType: 1,
-                    sourceUrl: "https://github.com/mrsupunfernando12/SUPUN-MD",
-                    thumbnailUrl: 'https://i.ibb.co/bHXBV08/9242c844b83f7bf9.jpg',
-                    renderLargerThumbnail: false,
-                    showAdAttribution: true
-                }
-            }
-        }, { quoted: mek });
+        const settingsHandler = async (msgUpdate) => {
+            try {
+                const message = msgUpdate.messages[0];
 
-       
-        const messageListener = async (update) => {
-            const message = update.messages[0];
-            if (!message.message || !message.message.extendedTextMessage) return;
+                if (message.message?.interactiveResponseMessage?.selectedId) {
+                    const selectedOption = message.message.interactiveResponseMessage.selectedId;
 
-            const userReply = message.message.extendedTextMessage.text.trim();
-            const selectedMovieIndex = parseInt(userReply) - 1;
+                    const toggleSetting = async (setting) => {
+                        const newValue = currentConfig[setting] === 'true' ? 'false' : 'true';
+                        await updateEnv(setting, newValue);
+                        reply(`✅ ${setting} updated to ${newValue}`);
+                    };
 
-            if (selectedMovieIndex < 0 || selectedMovieIndex >= result.results.length) {
-                await conn.sendMessage(from, {
-                    react: { text: '❌', key: mek.key }
-                });
-                return reply("Invalid selection. Please choose a valid number from the search results.");
-            }
-
-            const selectedMovie = result.results[selectedMovieIndex];
-            const link = selectedMovie.link;
-
-            
-            const movieDetails = await SinhalaSub.movie(link);
-            if (!movieDetails || !movieDetails.status || !movieDetails.result) {
-                return reply("Movie details not found or invalid link provided.");
-            }
-
-            const movie = movieDetails.result;
-            let movieMessage = `☘️ *${movie.title}*\n\n`;
-            movieMessage += `*🧿 Release Date:* ${movie.release_date}\n\n`;
-            movieMessage += `*🌍 Country:* ${movie.country}\n\n`;
-            movieMessage += `*⏱️ Duration:* ${movie.duration}\n\n`;
-            movieMessage += `*🎀 Categories:* ${movie.genres}\n\n`;
-            movieMessage += `*⭐ IMDB:* ${movie.IMDb_Rating}\n\n`;
-            movieMessage += `*🤵‍♂️ Director:* ${movie.director.name}\n\n`;
-            movieMessage += `*🔢 Reply Below Number*\n\n`;
-            movieMessage += `1 | 480p\n`;
-            movieMessage += `2 | 720p\n`;
-            movieMessage += `3 | 1080p\n\n`;
-            movieMessage += `> ᴘᴀᴡᴇʀᴇᴅ ʙʏ ꜱᴜᴘᴜɴ ᴍᴅ`;
-
-            const imageUrl = movie.images && movie.images.length > 0 ? movie.images[0] : '';
-
-           
-            const movieDetailsMessage = await conn.sendMessage(from, {
-                image: { url: imageUrl },
-                caption: movieMessage
-            });
-
-            
-            conn.ev.off("messages.upsert", messageListener);
-
-           
-            const qualityListener = async (update) => {
-                const message = update.messages[0];
-                if (!message.message || !message.message.extendedTextMessage) return;
-
-                const userReply = message.message.extendedTextMessage.text.trim();
-
-                if (message.message.extendedTextMessage.contextInfo.stanzaId === movieDetailsMessage.key.id) {
-                    let quality;
-                    if (userReply === '1') quality = "SD 480p";
-                    else if (userReply === '2') quality = "HD 720p";
-                    else if (userReply === '3') quality = "FHD 1080p";
-                    else {
-                        await conn.sendMessage(from, {
-                            react: { text: '❌', key: mek.key }
-                        });
-                        return reply("Invalid option. Please select from SD, HD, or FHD.");
+                    switch (selectedOption) {
+                        case 'mode_settings':
+                            reply(`Current Mode: ${currentConfig.MODE}\nAvailable Modes:\n1. public\n2. private\n3. groups\n4. inbox\n\nReply with desired mode.`);
+                            break;
+                        case 'auto_voice':
+                            await toggleSetting('AUTO_VOICE');
+                            break;
+                        case 'auto_sticker':
+                            await toggleSetting('AUTO_STICKER');
+                            break;
+                        case 'auto_reply':
+                            await toggleSetting('AUTO_REPLY');
+                            break;
+                        case 'auto_read':
+                            await toggleSetting('AUTO_READ_STATUS');
+                            break;
+                        case 'auto_react':
+                            await toggleSetting('AUTO_REACT');
+                            break;
+                        case 'reset_all':
+                            reply('Resetting all settings to default...');
+                            break;
                     }
 
-                    try {
-                     
-                        const directLink = await PixaldrainDL(link, quality, "direct");
-                        if (directLink) {
-                const sentMsg = await conn.sendMessage(from, {
-                                document: { url: directLink },
-                                mimetype: 'video/mp4',
-                                fileName: `🍿ꜱᴜᴘᴜɴ ᴍᴅ ᴍᴏᴠɪᴇ ᴜᴘʟᴏᴅᴇʀ.mp4`,
-                                caption: `${movie.title}\n\n> ᴘᴀᴡᴇʀᴇᴅ ʙʏ ꜱᴜᴘᴜɴ ᴍᴅ`,
-                 contextInfo: {
-                forwardingScore: 999,
-                isForwarded: false,
-                forwardedNewsletterMessageInfo: {
-                    newsletterName: '𝐒𝐔𝐏𝐔𝐍 𝐌𝐃',
-                    newsletterJid: "120363270086174844@newsletter",
-                },
-                externalAdReply: {
-                    title: '𝐒𝐔𝐏𝐔𝐍 𝐌𝐃',
-                    body: '',
-                    mediaType: 1,
-                    sourceUrl: "https://github.com/mrsupunfernando12/SUPUN-MD",
-                    thumbnailUrl: 'https://i.ibb.co/bHXBV08/9242c844b83f7bf9.jpg',
-                    renderLargerThumbnail: false,
-                    showAdAttribution: true
+                    conn.ev.off('messages.upsert', settingsHandler);
                 }
+            } catch (error) {
+                console.error("Settings Handler Error:", error);
+                reply(`❌ An error occurred: ${error.message}`);
             }
-       });
-                           
-                            await conn.sendMessage(from, {
-                                react: { text: '✅', key: mek.key }
-                            });
-                        } else {
-                            await conn.sendMessage(from, {
-                                react: { text: '❌', key: mek.key }
-                            });
-                            return reply(`Could not find the ${quality} download link. Please try another quality.`);
-                        }
-                    } catch (err) {
-                        console.error('Error in PixaldrainDL function:', err);
-                        await conn.sendMessage(from, {
-                            react: { text: '❌', key: mek.key }
-                        });
-                        return reply("An error occurred while processing your download request.");
-                    }
-                }
-            };
-
-           
-            conn.ev.on("messages.upsert", qualityListener);
-
-            
-            setTimeout(() => {
-                conn.ev.off("messages.upsert", qualityListener);
-            }, 200000);
         };
 
-        
-        conn.ev.on("messages.upsert", messageListener);
+        conn.ev.on('messages.upsert', settingsHandler);
 
-        
-        setTimeout(() => {
-            conn.ev.off("messages.upsert", messageListener);
-        }, 200000);
-
-    } catch (error) {
-        console.error('Error in movie search or details:', error);
-        await conn.sendMessage(from, {
-            react: { text: '❌', key: mek.key }
-        });
-        reply("An error occurred while fetching the movie search or details.");
+    } catch (e) {
+        console.error(e);
+        reply(`An error occurred: ${e.message}`);
     }
 });
