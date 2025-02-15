@@ -1,143 +1,167 @@
-const {
-  cmd,
-  commands
-} = require("../command");
-const yts = require("yt-search");
-const axios = require("axios");
-const {
-  fetchJson,
-  getBuffer
-} = require("../lib/functions");
+const { 
+    BufferJSON, 
+    WA_DEFAULT_EPHEMERAL, 
+    generateWAMessageFromContent, 
+    proto, 
+    generateWAMessageContent, 
+    generateWAMessage, 
+    prepareWAMessageMedia, 
+    downloadContentFromMessage, 
+    areJidsSameUser, 
+    getContentType 
+} = require('@whiskeysockets/baileys');
 
-const commandDetails = {
-  pattern: "songr",
-  desc: "Download Song",
-  react: "🎵",
-  use: ".song <YouTube URL>",
-  category: "download",
-  filename: __filename,
-};
+const { cmd } = require('../command');
+const { updateEnv, readEnv } = require('../lib/database');
+const config = require("../config");
 
-cmd(commandDetails, async (bot, message, args, { from, q, reply, sender }) => {
-  try {
-    if (!q) {
-      return reply("❌ Please provide a title. ❌");
-    }
+cmd({
+    pattern: "alive1",
+    desc: "Bot Settings Configuration",
+    react: "👋",
+    category: "owner",
+    filename: __filename
+},
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+    try {
+        const currentConfig = await readEnv();
 
-    const searchResults = await yts(q);
-    const video = searchResults.videos[0];
-    const videoUrl = video.url;
-    const videoTitle = video.title.length > 20 ? video.title.substring(0, 20) + "..." : video.title;
-
-    const downloadMessage = `*╭╼╼╼╼╼╼╼╼ ● 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ● ╼╼╼╼╼╼╼╼╮*
-     
-* *QUEEN RASHU MD SONG DAWNLODER🎧*
-
-*╭╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*
-*│* Song Name : ${videoTitle}
-*╰╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*
-
-* *Reply Required Format 👇*
-
-*✵ ╼╼╼╼╼( ʀᴀꜱʜᴜ )╼╼╼╼╼ ✵*
-
-*1 |: AUDIO  MP3 TYPE 🎶*
-*2 |: AUDIO  DOC TYPE 📂*
-*3 |: AUDIO VOICE MODE 🎤*
-
-> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`;
-
-    const axiosOptions = { responseType: "arraybuffer" };
-    const thumbnailImage = Buffer.from(
-      (await axios.get("https://i.ibb.co/g98HkMY/8188.jpg", axiosOptions)).data,
-      "binary"
-    );
-
-    const messageContext = {
-      image: { url: video.thumbnail || "https://i.ibb.co/g98HkMY/8188.jpg" },
-      caption: downloadMessage,
-      contextInfo: {
-        mentionedJid: [sender],
-        externalAdReply: {
-          showAdAttribution: true,
-          containsAutoReply: true,
-          title: "QUEEN RASHU MD",
-          body: "© 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐕1",
-          previewType: "PHOTO",
-          thumbnail: thumbnailImage,
-          sourceUrl: "https://whatsapp.com/channel/0029Vb2GOyk6rsQwJSBa7T2h",
-          mediaType: 1,
-        },
-      },
-    };
-
-    const fetchAudio = await fetchJson(`https://movie.asitha.us.kg/api/song/mp3?url=${videoUrl}`);
-    const downloadLink = fetchAudio.download.url;
-
-    const initialMessage = await bot.sendMessage(from, messageContext, { quoted: message });
-
-    bot.ev.on("messages.upsert", async (newMessageEvent) => {
-      const newMessage = newMessageEvent.messages[0];
-
-      if (!newMessage.message || !newMessage.message.extendedTextMessage) {
-        return;
-      }
-
-      const userResponse = newMessage.message.extendedTextMessage.text.trim();
-      const contextInfo = newMessage.message.extendedTextMessage.contextInfo;
-
-      if (contextInfo && contextInfo.stanzaId === initialMessage.key.id) {
-        try {
-          switch (userResponse) {
-            case "1":
-              await bot.sendMessage(
-                from,
-                {
-                  audio: { url: downloadLink },
-                  mimetype: "audio/mpeg",
-                  fileName: `${video.title}.mp3`,
-                  caption: "> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*",
-                },
-                { quoted: newMessage }
-              );
-              break;
-
-            case "2":
-              await bot.sendMessage(
-                from,
-                {
-                  document: { url: downloadLink },
-                  mimetype: "audio/mpeg",
-                  fileName: `${video.title}.mp3`,
-                  caption: "> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*",
-                },
-                { quoted: newMessage }
-              );
-              break;
-
-            case "3":
-              await bot.sendMessage(
-                from,
-                {
-                  audio: { url: downloadLink },
-                  mimetype: "audio/mpeg",
-                  ptt: true,
-                },
-                { quoted: newMessage }
-              );
-              break;
-
-            default:
-              reply("❌ Invalid option. Please select a valid option (1, 2, or 3) 🔴");
-          }
-        } catch (error) {
-          console.error(error);
-          reply(`❌ Error: ${error.message} ❌`);
+        async function createImage(url) {
+            const { imageMessage } = await generateWAMessageContent({
+                image: { url }
+            }, {
+                upload: conn.waUploadToServer
+            });
+            return imageMessage;
         }
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    reply(`❌ Error: ${error.message} ❌`);
-  }
+
+        const settingsDetails = [{
+            body: proto.Message.InteractiveMessage.Body.create({
+                text: `᮰ 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ᮰`
+            }),
+            footer: proto.Message.InteractiveMessage.Footer.create({
+                text: config.FOOTER
+            }),
+            header: proto.Message.InteractiveMessage.Header.create({
+                title: `👋 Hello ${pushname}!\n\n*I AM ALIVE NOW*\n\n> *𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`,
+                hasMediaAttachment: true,
+                imageMessage: await createImage('https://i.ibb.co/g98HkMY/8188.jpg')
+            }),
+            nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                buttons: [
+                    {
+                        "name": "cta_url",
+                        "buttonParamsJson": JSON.stringify({
+                            "display_text": "♤ 𝐎𝐖𝐍𝐄𝐑 ♤",
+                            "url": "https://wa.me/94727319036"
+                        })
+                    },
+                    {
+                        "name": "cta_url",
+                        "buttonParamsJson": JSON.stringify({
+                            "display_text": "♤ 𝐂𝐇𝐀𝐍𝐍𝐄𝐋 ♤",
+                            "url": "https://whatsapp.com/channel/0029Vb2GOyk6rsQwJSBa7T2h"
+                        })
+                    },
+                    {
+                        "name": "cta_url",
+                        "buttonParamsJson": JSON.stringify({
+                            "display_text": "♤ 𝐁𝐎𝐓 𝐆𝐑𝐎𝐔𝐏 ♤",
+                            "url": "https://chat.whatsapp.com/F3ZWEVVfOkf9tGAF4J9pDI"
+                        })
+                    },
+                    {
+                        "name": "cta_url",
+                        "buttonParamsJson": JSON.stringify({
+                            "display_text": "♤ 𝐘𝐎𝐔𝐓𝐔𝐁𝐄 ♤",
+                            "url": "https://youtube.com/@rashumodz_0715?si=5pg_wumwy6VzizMP"
+                        })
+                    },
+                    {
+                        "name": "cta_url",
+                        "buttonParamsJson": JSON.stringify({
+                            "display_text": "♤ 𝐁𝐎𝐓 𝐖𝐄𝐁 ♤",
+                            "url": "https://queen-rashu-sesion-7bdf00f2fa51.herokuapp.com/"
+                        })
+                    }
+                ]
+            })
+        }];
+
+        const msg = generateWAMessageFromContent(from, {
+            viewOnceMessage: {
+                message: {
+                    interactiveMessage: proto.Message.InteractiveMessage.create({
+                        body: proto.Message.InteractiveMessage.Body.create({
+                            text: 'Bot Settings Configuration\n\nSelect an option to modify'
+                        }),
+                        footer: proto.Message.InteractiveMessage.Footer.create({
+                            text: config.FOOTER
+                        }),
+                        header: proto.Message.InteractiveMessage.Header.create({
+                            hasMediaAttachment: false
+                        }),
+                        carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.create({
+                            cards: settingsDetails
+                        })
+                    })
+                }
+            }
+        }, {});
+
+        await conn.relayMessage(from, msg.message, {
+            messageId: msg.key.id
+        });
+
+        const settingsHandler = async (msgUpdate) => {
+            try {
+                const message = msgUpdate.messages[0];
+
+                if (message.message?.interactiveResponseMessage?.selectedId) {
+                    const selectedOption = message.message.interactiveResponseMessage.selectedId;
+
+                    const toggleSetting = async (setting) => {
+                        const newValue = currentConfig[setting] === 'true' ? 'false' : 'true';
+                        await updateEnv(setting, newValue);
+                        reply(`✅ ${setting} updated to ${newValue}`);
+                    };
+
+                    switch (selectedOption) {
+                        case 'mode_settings':
+                            reply(`Current Mode: ${currentConfig.MODE}\nAvailable Modes:\n1. public\n2. private\n3. groups\n4. inbox\n\nReply with desired mode.`);
+                            break;
+                        case 'auto_voice':
+                            await toggleSetting('AUTO_VOICE');
+                            break;
+                        case 'auto_sticker':
+                            await toggleSetting('AUTO_STICKER');
+                            break;
+                        case 'auto_reply':
+                            await toggleSetting('AUTO_REPLY');
+                            break;
+                        case 'auto_read':
+                            await toggleSetting('AUTO_READ_STATUS');
+                            break;
+                        case 'auto_react':
+                            await toggleSetting('AUTO_REACT');
+                            break;
+                        case 'reset_all':
+                            reply('Resetting all settings to default...');
+                            break;
+                    }
+
+                    conn.ev.off('messages.upsert', settingsHandler);
+                }
+            } catch (error) {
+                console.error("Settings Handler Error:", error);
+                reply(`❌ An error occurred: ${error.message}`);
+            }
+        };
+
+        conn.ev.on('messages.upsert', settingsHandler);
+
+    } catch (e) {
+        console.error(e);
+        reply(`An error occurred: ${e.message}`);
+    }
 });
