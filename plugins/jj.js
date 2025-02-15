@@ -2,7 +2,7 @@ const { cmd, commands } = require("../command");
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson } = require("../lib/functions");
 
 cmd({
-  pattern: "promote",
+  pattern: "hke",
   react: "🥏",
   alias: ["addadmin"],
   desc: "To Add a participant as an Admin",
