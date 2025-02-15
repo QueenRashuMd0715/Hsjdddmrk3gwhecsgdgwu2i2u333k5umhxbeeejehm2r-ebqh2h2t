@@ -10,7 +10,7 @@ const {
 } = require("../lib/functions");
 
 const commandDetails = {
-  pattern: "songr",
+  pattern: "song",
   desc: "Download Song",
   react: "🎵",
   use: ".song <YouTube URL>",
