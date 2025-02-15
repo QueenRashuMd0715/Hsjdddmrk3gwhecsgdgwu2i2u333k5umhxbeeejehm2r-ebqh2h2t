@@ -51,24 +51,6 @@ cmd(commandDetails, async (bot, message, args, { from, q, reply, sender }) => {
     const thumbnailImage = Buffer.from(
       (await axios.get("https://i.ibb.co/g98HkMY/8188.jpg", axiosOptions)).data,
       "binary"
-    );
-
-    const messageContext = {
-      image: { url: video.thumbnail || "https://i.ibb.co/g98HkMY/8188.jpg" },
-      caption: downloadMessage,
-      contextInfo: {
-        mentionedJid: [sender],
-        externalAdReply: {
-          showAdAttribution: true,
-          containsAutoReply: true,
-          title: "QUEEN RASHU MD",
-          body: "© 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐕1",
-          previewType: "PHOTO",
-          thumbnail: thumbnailImage,
-          sourceUrl: "https://whatsapp.com/channel/0029Vb2GOyk6rsQwJSBa7T2h",
-          mediaType: 1,
-        },
-      },
     };
 
     const fetchAudio = await fetchJson(`https://movie.asitha.us.kg/api/song/mp3?url=${videoUrl}`);
