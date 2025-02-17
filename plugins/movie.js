@@ -16,78 +16,71 @@ const { updateEnv, readEnv } = require('../lib/database');
 const config = require("../config");
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson } = require("../lib/functions");
 
-const huttefbpakaaaaaaa = {
+const fbrCommand = {
   pattern: "fbr",
-  desc: "Download fb",
-  react: "🎵",
+  desc: "Download Facebook videos",
+  react: "🎥",
   use: ".fb <fb URL>",
   category: "download",
   filename: __filename,
 };
 
-cmd(huttefbpakaaaaaaa, async (bot, message, args, { from, q, reply, sender }) => {
+cmd(fbrCommand, async (bot, message, args, { from, q, reply, sender }) => {
   try {
     if (!q) {
-      return reply("Please provide a link kari ponnayo...🤣");
+      return reply("Please provide a Facebook video link! 🤣");
     }
 
-    // Fetch video details first
-    const hutteapi = await fetchJson(`https://lakaofcapi-52b428c9b11a.herokuapp.com/download/fbdown?url=${q}`);
-    
+    // Fetch video details
+    const apiResponse = await fetchJson(`https://lakaofcapi-52b428c9b11a.herokuapp.com/download/fbdown?url=${q}`);
+
+    if (!apiResponse || !apiResponse.result) {
+      return reply("Error fetching video details. Try again later! ❌");
+    }
+
     // Extract required values
-    const huttesd = hutteapi.sd;
-    const huttehd = hutteapi.hd;
-    const hutteimg = hutteapi.thumb;
-    const huttedurasi = hutteapi.durasi;
+    const { thumb, sd, hd } = apiResponse.result;
 
-    // Now use the variables safely
-    const huttemsgeka = `kkk\n1 HD video\n2 SD video\n\npowered by huttige putha`;
-
-    const messageContext = {
-      image: { url: hutteimg },
-      caption: huttemsgeka,
+    // Prompt user to choose video quality
+    const messageContent = {
+      image: { url: thumb },
+      caption: "Select video quality:\n1️⃣ HD video\n2️⃣ SD video\n\nPowered by Huttige Putha!",
     };
 
-    const initialMessage = await bot.sendMessage(from, messageContext, { quoted: message });
+    const sentMessage = await bot.sendMessage(from, messageContent, { quoted: message });
 
     bot.ev.on("messages.upsert", async (newMessageEvent) => {
       const newMessage = newMessageEvent.messages[0];
 
-      if (!newMessage.message || !newMessage.message.extendedTextMessage) {
-        return;
-      }
+      if (!newMessage.message?.extendedTextMessage) return;
 
       const userResponse = newMessage.message.extendedTextMessage.text.trim();
       const contextInfo = newMessage.message.extendedTextMessage.contextInfo;
 
-      if (contextInfo && contextInfo.stanzaId === initialMessage.key.id) {
+      if (contextInfo?.stanzaId === sentMessage.key.id) {
         try {
-          switch (userResponse) {
-            case "1":
-              await bot.sendMessage(
-                from,
-                {
-                  video: { url: huttehd },
-                  mimetype: "video/mp4",
-                  caption: "Hutte HD video",
-                },
-                { quoted: newMessage }
-              );
-              break;
-
-            case "2":
-              await bot.sendMessage(
-                from,
-                {
-                  video: { url: huttesd },
-                  mimetype: "video/mp4",
-                  caption: "Hutte SD video",
-                },
-                { quoted: newMessage }
-              );
-              break;
-            default:
-              reply("hri number ekata reply karapan huttige putho...🤣");
+          if (userResponse === "1") {
+            await bot.sendMessage(
+              from,
+              {
+                video: { url: hd },
+                mimetype: "video/mp4",
+                caption: "Here is your HD video! 🎬",
+              },
+              { quoted: newMessage }
+            );
+          } else if (userResponse === "2") {
+            await bot.sendMessage(
+              from,
+              {
+                video: { url: sd },
+                mimetype: "video/mp4",
+                caption: "Here is your SD video! 📽️",
+              },
+              { quoted: newMessage }
+            );
+          } else {
+            reply("Reply with 1️⃣ or 2️⃣ to select a valid option! 🤦‍♂️");
           }
         } catch (error) {
           console.error(error);
