@@ -25,77 +25,58 @@ const fbrCommand = {
   filename: __filename,
 };
 
-cmd(fbrCommand, async (bot, message, args, { from, q, reply, sender }) => {
+cmd(fbrCommand, async (bot, message, args, { from, q, reply }) => {
   try {
-    if (!q || typeof q !== "string") {
-      return reply("Please provide a valid Facebook video link! 🤦‍♂️");
-    }
+    // 🔹 Validate the input
+    if (!q) return reply("Please provide a valid Facebook video link!");
 
-    // Fetch video details
+    // 🔹 Fetch video details
     const apiUrl = `https://lakaofcapi-52b428c9b11a.herokuapp.com/download/fbdown?url=${encodeURIComponent(q)}`;
     const apiResponse = await fetchJson(apiUrl);
+    
+    if (!apiResponse?.result) return reply("Error fetching video details. Try again later!");
 
-    if (!apiResponse || !apiResponse.result) {
-      return reply("Error fetching video details. Try again later! ❌");
-    }
-
-    // Extract required values
     const { thumb, sd, hd } = apiResponse.result;
+    if (!sd && !hd) return reply("No video available for download.");
 
-    if (!sd && !hd) {
-      return reply("Video download links not available. 😢");
-    }
+    // 🔹 Send quality selection message
+    const selectionMessage = await bot.sendMessage(
+      from, 
+      { image: { url: thumb }, caption: "Select video quality🤣:\n1️⃣ HD video\n2️⃣ SD video" }, 
+      { quoted: message }
+    );
 
-    // Prompt user to choose video quality
-    const messageContent = {
-      image: { url: thumb },
-      caption: "Select video quality:\n1️⃣ HD video\n2️⃣ SD video\n\nPowered by Huttige Putha!",
-    };
-
-    const sentMessage = await bot.sendMessage(from, messageContent, { quoted: message });
-
-    bot.ev.on("messages.upsert", async (newMessageEvent) => {
-      const newMessage = newMessageEvent.messages[0];
+    // 🔹 Handle user response
+    bot.ev.on("messages.upsert", async (event) => {
+      const newMessage = event.messages[0];
 
       if (!newMessage?.message?.extendedTextMessage) return;
+      if (newMessage.message.extendedTextMessage.contextInfo?.stanzaId !== selectionMessage.key.id) return;
 
-      const userResponse = newMessage.message.extendedTextMessage.text.trim();
-      const contextInfo = newMessage.message.extendedTextMessage.contextInfo;
-
-      if (contextInfo?.stanzaId === sentMessage.key.id) {
-        try {
-          if (userResponse === "1" && hd) {
-            await bot.sendMessage(
-              from,
-              {
-                video: { url: hd },
-                mimetype: "video/mp4",
-                caption: "Here is your HD video! 🎬",
-              },
-              { quoted: newMessage }
-            );
-          } else if (userResponse === "2" && sd) {
-            await bot.sendMessage(
-              from,
-              {
-                video: { url: sd },
-                mimetype: "video/mp4",
-                caption: "Here is your SD video! 📽️",
-              },
-              { quoted: newMessage }
-            );
-          } else {
-            reply("Reply with 1️⃣ or 2️⃣ to select a valid option! 🤦‍♂️");
-          }
-        } catch (error) {
-          console.error(error);
-          reply(`❌ Error: ${error.message} ❌`);
-        }
+      const userChoice = newMessage.message.extendedTextMessage.text.trim();
+      
+      let videoUrl, quality;
+      if (userChoice === "1" && hd) {
+        videoUrl = hd;
+        quality = "HD";
+      } else if (userChoice === "2" && sd) {
+        videoUrl = sd;
+        quality = "SD";
+      } else {
+        return reply("Reply with 1️⃣ or 2️⃣ to select a valid option!");
       }
+
+      // 🔹 Send selected video
+      await bot.sendMessage(
+        from, 
+        { video: { url: videoUrl }, mimetype: "video/mp4", caption: `Here is your ${quality} video! 🎬` }, 
+        { quoted: newMessage }
+      );
     });
+
   } catch (error) {
     console.error(error);
-    reply(`❌ Error: ${error.message} ❌`);
+    reply("❌ Error occurred while processing your request.");
   }
 });
 
