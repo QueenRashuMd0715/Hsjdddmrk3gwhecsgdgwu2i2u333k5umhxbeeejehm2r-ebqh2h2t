@@ -14,6 +14,7 @@ const {
 const { cmd } = require('../command');
 const { updateEnv, readEnv } = require('../lib/database');
 const config = require("../config");
+const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson } = require("../lib/functions");
 
 const huttefbpakaaaaaaa = {
   pattern: "fbr",
