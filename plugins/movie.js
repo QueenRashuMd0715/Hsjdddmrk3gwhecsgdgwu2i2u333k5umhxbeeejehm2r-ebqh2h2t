@@ -27,26 +27,32 @@ const fbrCommand = {
 
 cmd(fbrCommand, async (bot, message, args, { from, q, reply }) => {
   try {
-    // 🔹 Validate the input
     if (!q) return reply("Please provide a valid Facebook video link!");
 
-    // 🔹 Fetch video details
     const apiUrl = `https://lakaofcapi-52b428c9b11a.herokuapp.com/download/fbdown?url=${encodeURIComponent(q)}`;
     const apiResponse = await fetchJson(apiUrl);
-    
+
     if (!apiResponse?.result) return reply("Error fetching video details. Try again later!");
 
     const { thumb, sd, hd } = apiResponse.result;
     if (!sd && !hd) return reply("No video available for download.");
 
-    // 🔹 Send quality selection message
     const selectionMessage = await bot.sendMessage(
       from, 
-      { image: { url: thumb }, caption: "Select video quality🤣:\n1️⃣ HD video\n2️⃣ SD video" }, 
+      { image: { url: thumb }, caption: `*𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 FB DAWNLODER 📩*
+
+* URL : 
+
+*🔢 Sᴇʟᴇᴄᴛ Aɴ Oᴘᴛɪᴏɴ Bᴇʟᴏᴡ 🌼*
+
+* 1️⃣ 𝐒𝐃 𝐓𝐘𝐏𝐄 ❗
+
+* 2️⃣ 𝐇𝐃 𝐓𝐘𝐏𝐄 ‼️
+
+> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*` }, 
       { quoted: message }
     );
 
-    // 🔹 Handle user response
     bot.ev.on("messages.upsert", async (event) => {
       const newMessage = event.messages[0];
 
@@ -54,7 +60,7 @@ cmd(fbrCommand, async (bot, message, args, { from, q, reply }) => {
       if (newMessage.message.extendedTextMessage.contextInfo?.stanzaId !== selectionMessage.key.id) return;
 
       const userChoice = newMessage.message.extendedTextMessage.text.trim();
-      
+
       let videoUrl, quality;
       if (userChoice === "1" && hd) {
         videoUrl = hd;
@@ -66,7 +72,6 @@ cmd(fbrCommand, async (bot, message, args, { from, q, reply }) => {
         return reply("Reply with 1️⃣ or 2️⃣ to select a valid option!");
       }
 
-      // 🔹 Send selected video
       await bot.sendMessage(
         from, 
         { video: { url: videoUrl }, mimetype: "video/mp4", caption: `Here is your ${quality} video! 🎬` }, 
