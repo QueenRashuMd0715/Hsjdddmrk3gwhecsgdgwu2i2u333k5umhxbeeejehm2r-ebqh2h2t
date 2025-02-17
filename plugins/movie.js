@@ -27,12 +27,13 @@ const fbrCommand = {
 
 cmd(fbrCommand, async (bot, message, args, { from, q, reply, sender }) => {
   try {
-    if (!q) {
-      return reply("Please provide a Facebook video link! 🤣");
+    if (!q || typeof q !== "string") {
+      return reply("Please provide a valid Facebook video link! 🤦‍♂️");
     }
 
     // Fetch video details
-    const apiResponse = await fetchJson(`https://lakaofcapi-52b428c9b11a.herokuapp.com/download/fbdown?url=${q}`);
+    const apiUrl = `https://lakaofcapi-52b428c9b11a.herokuapp.com/download/fbdown?url=${encodeURIComponent(q)}`;
+    const apiResponse = await fetchJson(apiUrl);
 
     if (!apiResponse || !apiResponse.result) {
       return reply("Error fetching video details. Try again later! ❌");
@@ -40,6 +41,10 @@ cmd(fbrCommand, async (bot, message, args, { from, q, reply, sender }) => {
 
     // Extract required values
     const { thumb, sd, hd } = apiResponse.result;
+
+    if (!sd && !hd) {
+      return reply("Video download links not available. 😢");
+    }
 
     // Prompt user to choose video quality
     const messageContent = {
@@ -52,14 +57,14 @@ cmd(fbrCommand, async (bot, message, args, { from, q, reply, sender }) => {
     bot.ev.on("messages.upsert", async (newMessageEvent) => {
       const newMessage = newMessageEvent.messages[0];
 
-      if (!newMessage.message?.extendedTextMessage) return;
+      if (!newMessage?.message?.extendedTextMessage) return;
 
       const userResponse = newMessage.message.extendedTextMessage.text.trim();
       const contextInfo = newMessage.message.extendedTextMessage.contextInfo;
 
       if (contextInfo?.stanzaId === sentMessage.key.id) {
         try {
-          if (userResponse === "1") {
+          if (userResponse === "1" && hd) {
             await bot.sendMessage(
               from,
               {
@@ -69,7 +74,7 @@ cmd(fbrCommand, async (bot, message, args, { from, q, reply, sender }) => {
               },
               { quoted: newMessage }
             );
-          } else if (userResponse === "2") {
+          } else if (userResponse === "2" && sd) {
             await bot.sendMessage(
               from,
               {
