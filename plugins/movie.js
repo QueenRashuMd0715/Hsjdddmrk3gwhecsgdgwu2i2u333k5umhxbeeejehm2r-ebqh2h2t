@@ -37,14 +37,14 @@ cmd(huttefbpakaaaaaaa, async (bot, message, args, { from, q, reply, sender }) =>
     // Extract required values
     const huttesd = hutteapi.sd;
     const huttehd = hutteapi.hd;
-    //const huttetitle = hutteapi.title;
+    const hutteimg = hutteapi.thumb;
     const huttedurasi = hutteapi.durasi;
 
     // Now use the variables safely
     const huttemsgeka = `kkk\n1 HD video\n2 SD video\n\npowered by huttige putha`;
 
     const messageContext = {
-      image: { url: hutteapi.thumb },
+      image: { url: hutteimg },
       caption: huttemsgeka,
     };
 
