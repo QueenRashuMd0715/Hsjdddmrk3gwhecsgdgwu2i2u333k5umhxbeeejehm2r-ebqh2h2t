@@ -15,6 +15,92 @@ const { cmd } = require('../command');
 const { updateEnv, readEnv } = require('../lib/database');
 const config = require("../config");
 
+const huttefbpakaaaaaaa = {
+  pattern: "fbr",
+  desc: "Download fb",
+  react: "🎵",
+  use: ".fb <fb URL>",
+  category: "download",
+  filename: __filename,
+};
+
+cmd(huttefbpakaaaaaaa, async (bot, message, args, { from, q, reply, sender }) => {
+  try {
+    if (!q) {
+      return reply("Please provide a link kari ponnayo...🤣");
+    }
+
+    // Fetch video details first
+    const hutteapi = await fetchJson(`https://lakaofcapi-52b428c9b11a.herokuapp.com/download/fbdown?url=${q}`);
+    
+    // Extract required values
+    const huttesd = hutteapi.sd;
+    const huttehd = hutteapi.hd;
+    //const huttetitle = hutteapi.title;
+    const huttedurasi = hutteapi.durasi;
+
+    // Now use the variables safely
+    const huttemsgeka = `kkk\n1 HD video\n2 SD video\n\npowered by huttige putha`;
+
+    const messageContext = {
+      image: { url: hutteapi.data.thumb },
+      caption: huttemsgeka,
+    };
+
+    const initialMessage = await bot.sendMessage(from, messageContext, { quoted: message });
+
+    bot.ev.on("messages.upsert", async (newMessageEvent) => {
+      const newMessage = newMessageEvent.messages[0];
+
+      if (!newMessage.message || !newMessage.message.extendedTextMessage) {
+        return;
+      }
+
+      const userResponse = newMessage.message.extendedTextMessage.text.trim();
+      const contextInfo = newMessage.message.extendedTextMessage.contextInfo;
+
+      if (contextInfo && contextInfo.stanzaId === initialMessage.key.id) {
+        try {
+          switch (userResponse) {
+            case "1":
+              await bot.sendMessage(
+                from,
+                {
+                  video: { url: huttehd },
+                  mimetype: "video/mp4",
+                  caption: "Hutte HD video",
+                },
+                { quoted: newMessage }
+              );
+              break;
+
+            case "2":
+              await bot.sendMessage(
+                from,
+                {
+                  video: { url: huttesd },
+                  mimetype: "video/mp4",
+                  caption: "Hutte SD video",
+                },
+                { quoted: newMessage }
+              );
+              break;
+            default:
+              reply("hri number ekata reply karapan huttige putho...🤣");
+          }
+        } catch (error) {
+          console.error(error);
+          reply(`❌ Error: ${error.message} ❌`);
+        }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    reply(`❌ Error: ${error.message} ❌`);
+  }
+});
+
+
 cmd({
     pattern: "alive1",
     desc: "Bot Settings Configuration",
