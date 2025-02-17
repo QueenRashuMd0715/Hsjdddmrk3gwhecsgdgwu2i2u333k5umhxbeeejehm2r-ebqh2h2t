@@ -44,7 +44,7 @@ cmd(huttefbpakaaaaaaa, async (bot, message, args, { from, q, reply, sender }) =>
     const huttemsgeka = `kkk\n1 HD video\n2 SD video\n\npowered by huttige putha`;
 
     const messageContext = {
-      image: { url: hutteapi.data.thumb },
+      image: { url: hutteapi.thumb },
       caption: huttemsgeka,
     };
 
