@@ -1,145 +1,189 @@
-// CODED BY QUEEN RASHU MD
+// Update සූන්
 
 
-const { cmd } = require('../command')
-const { fetchJson } = require('../lib/functions')
-const searchlink = 'https://dark-yasiya-api.site' 
-const downlink = 'https://dark-shan-yt.koyeb.app/download'
-const apilink = 'https://www.dark-yasiya-api.site' 
+const { cmd, commands } = require('../lib/command');
+const scraper = require("../lib/scraperd");
+const axios = require('axios');
+const fetch = require('node-fetch');
+const { fetchJson, getBuffer } = require('../lib/functions');
+const { lookup } = require('mime-types');
+const fs = require('fs');
+const path = require('path');
+const yts = require('yt-search'); // For YouTube search
+const cheerio = require('cheerio'); // Import cheerio for HTML parsing
+
+
+cmd({
+    pattern: "pornhub",
+    alias: ["ph"],
+    react: "🎥",
+    desc: "download xVideo",
+    category: "download",
+    filename: __filename
+},
+async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+    try {
+        if (!q) return reply("*⚠️ Please provide a video title or URL*\n\n*Example:* .xvideo Nicolette");
+
+        const query = String(q);
+        const searchResponse = await axios.get(`https://ipa-oya.vercel.app/api/ph?q=${encodeURIComponent(query)}`);
+
+        const deta = searchResponse.data;
+        const videoUrl = deta.url;
+
+        let desc = `🎥 *𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 - Now Downloading:* ${deta.title}
+
+⏳ *Please wait, processing your request...*`;
+
+        await conn.sendMessage(from, { 
+            image: { url: deta.image }, 
+            caption: desc 
+        }, { quoted: mek }).catch(() => reply("❌ Error sending thumbnail"));
+
+        try {
+            const downloadResponse = await axios.get(`https://ipa-oya.vercel.app/api/phdl?q=${encodeURIComponent(videoUrl)}`);
+            const downloadUrls = downloadResponse.data;
+
+            if (!downloadUrls || downloadUrls.length === 0) {
+                return reply("❌ No download links found.");
+            }
+
+            let downloadMessage = "🎥 *𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 Successfully Downloaded!*\n\nAvailable Resolutions:\n";
+            downloadUrls.forEach((video) => {
+                downloadMessage += `- ${video.resolution}p: ${video.download_url}\n`;
+            });
+
+            // Send the first download link as a video message
+            const firstDownloadUrl = downloadUrls[0].download_url;
+            await conn.sendMessage(from, { 
+                video: { url: firstDownloadUrl }, 
+                caption: downloadMessage 
+            }, { quoted: mek });
+
+        } catch (error) {
+            reply("❌ Error fetching download links: " + error.message);
+        }
+
+    } catch (e) {
+        console.log(e);
+        reply(`❌ Error: ${e.message}`);
+    }
+});
+
+
+cmd({
+    pattern: "xvideo",
+    alias: ["xvideo2"],
+    react: "🎥",
+    desc: "download",
+    category: "download",
+    filename: __filename
+},
+async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+    try {
+        if (!q) return reply("*⚠️ Please provide a video title or URL*\n\n*Example:* .xvideo My MILF Secretary Love");
+
+        const query = String(q);
+        const searchResponse = await axios.get(`https://api.giftedtech.my.id/api/search/xvideossearch?apikey=gifted&query=${encodeURIComponent(query)}`);
+
+        if (!searchResponse.data.results || !searchResponse.data.results.length) {
+            return reply("❌ No results found! Please try another search.");
+        }
+
+        const deta = searchResponse.data.results[0];
+        const videoUrl = deta.url;
+
+        let desc = `*‼️𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 XVIDEO DAWNLOAD 🔞*
+---------------------------------------------
+*Dawnloading :* _${deta.title}_
+---------------------------------------------
+࿘ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ࿘
+* 📟 *Duration:* ${deta.duration}
+* 👀 *Views:* ${deta.views || 'N/A'}
+* 📅 *Quality:* ${deta.quality || 'N/A'}
+
+> ⏳ *Please wait, processing your request...*
+
+*🔞මෙම දර්ශන දැකීමෙන් ඔබේ දරුවා මීට යොමු විය හැක......‼️*
+
+> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`;
+
+        await conn.sendMessage(from, { 
+            image: { url: deta.thumb }, 
+            caption: desc 
+        }, { quoted: mek }).catch(() => reply("❌ Error sending thumbnail"));
+
+        try {
+            const downloadResponse = await axios.get(`https://api.giftedtech.my.id/api/download/xvideosdl?apikey=gifted&url=${encodeURIComponent(videoUrl)}`);
+
+            const downloadUrl = downloadResponse.data.result.download_url;
+
+            await conn.sendMessage(from, { 
+                video: { url: downloadUrl }, 
+                mimetype: "video/mp4", 
+                caption: "🎥 *𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 XVIDEO Successfully Downloaded!*" 
+            }, { quoted: mek });
+
+        } catch (error) {
+            reply("❌ Error downloading video: " + error.message);
+        }
+
+    } catch (e) {
+        console.log(e);
+        reply(`❌ Error: ${e.message}`);
+    }
+});
+
 
 
 
 cmd({
-    pattern: "phub",
-    alias: ["ph","porndown","pornhub"],
-    react: "🔞",
-    desc: "Download pornhub.com porn video",
-    category: "download",
-    use: '.phub < text >',
-    filename: __filename
+    pattern: "hirucheck",
+    alias: ["hirunews","newshiru","hirulk"],
+    react: "⭐",
+    category: "search",
+    desc: "Fetch the latest news from the SUHAS API in Hiru API.",
+    use: "",
+    filename: __filename,
 },
-async(conn, mek, m,{from, quoted, reply, q }) => {
-try{
+    async (conn, mek, m, {
+        from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber,
+        botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName,
+        participants, groupAdmins, isBotAdmins, isAdmins, reply
+    }) => {
+        try {
+            const apiUrl = `https://suhas-bro-apii.vercel.app/hiru`;
+//Dont Change This API Key
+            const response = await axios.get(apiUrl);
+            const data = response.data;
 
-  if(!q) return await reply("Please give me few word !")
-    
-const phub_search = await fetchJson(`${apilink}/search/phub?q=${q}`)
-if(phub_search.result.length < 0) return await reply("Not results found !")
+            if (!data || !data.newsURL || !data.title || !data.image || !data.text) {
+                return reply(`*No News Available At This Moment* ❗`);
+            }
 
-const phub_info = await fetchJson(`${apilink}/download/phub?url=${phub_search.result[0].url}`)
-    
-  // GET FIRST VIDEO
-  
-const phubcaption =` 
+            const { newsURL, title, image, text, Power } = data;
 
-*📍QUEEN RASHU MD PORNHUB 🔞*
+            let newsInfo = "𝐃𝐢𝐝𝐮𝐥𝐚 𝐌𝐃 𝐕𝟐 𝐍𝐞𝐰𝐬 📰\n\n";
+            newsInfo += `✨ *Title*: ${title}\n\n`;
+            newsInfo += `📑 *Description*:\n${text}\n\n`;
+            newsInfo += `⛓️‍💥 *Url*: www.hirunews.lk\n\n`;
+            newsInfo += `> *ᴩʀᴏᴊᴇᴄᴛꜱ ᴏꜰ ᴅɪᴅᴜʟᴀ ʀᴀꜱʜᴍɪᴋᴀ*`;
 
-     
-*🔞 TITEL :* _${phub_info.result.video_title}_
-*📩 UPLOADER :* _${phub_info.result.video_uploader}_
-*🔥 DURATION :* _${phub_info.result.analyze_time}_
+            if (image) {
+                await conn.sendMessage(m.chat, {
+                    image: { url: image },
+                    caption: newsInfo,
+                }, { quoted: m });
+            } else {
+                await conn.sendMessage(m.chat, { text: newsInfo }, { quoted: m });
+            }
 
-> *QUEEN RASHU MD*`
-await conn.sendMessage( from, { image: { url: phub_info.result.video_cover || '' }, caption: phubcaption }, { quoted: mek })
-
-// SEND 240P QUALITY VIDEO
-await conn.sendMessage(from, { document: { url: phub_info.result.format[0].download_url }, mimetype: "video/mp4", fileName: phub_info.result.video_title, caption: phub_info.result.video_title }, { quoted: mek });
-
-
-} catch (error) {
-console.log(error)
-reply(error)
-}
-})
-
-
-
-cmd({
-    pattern: "apk1",
-    alias: ["app1","ps1","playstore"],
-    react: "📩",
-    desc: "Download App APK ",
-    category: "download",
-    use: '.apk < text >',
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, reply, q }) => {
-try{
-
-  if(!q) return await reply("Please give me few word !")
-    
-const apk_search = await fetchJson(`${apilink}/search/apk?text=${q}`)
-if(apk_search.result.data.length < 0) return await reply("Not results found !")
-
-const apk_info = await fetchJson(`${apilink}/download/apk?id=${apk_search.result.data[0].id}`)
-    
-  // GET FIRST APK
-  
-const apkcaption =` 
-
-*QUEEN RASHU MD APK DOWNLOADER 📩*
-
-     
-*🔥 NAME :* _${apk_info.result.name}_
-*🔥 PAKAGE :* _${apk_info.result.package}_
-*🔥 SIZE :* _${apk_info.result.size}_
-
-> *QUEEN RASHU MD*
-`
-await conn.sendMessage( from, { image: { url: apk_info.result.image || '' }, caption: apkcaption }, { quoted: mek })
-
-// SEND APK
-await conn.sendMessage(from, { document: { url: apk_info.result.dl_link }, mimetype: "application/vnd.android.package-archive", fileName: apk_info.result.name , caption: apk_info.result.name }, { quoted: mek });
-
-
-} catch (error) {
-console.log(error)
-reply(error)
-}
-})
-
-
-cmd({
-    pattern: "facebook1DJXJXJXBXHXJXMDJDJ",
-    //alias: ["fb"],
-    react: "🔞",
-    desc: "Download facebook video",
-    category: "download",
-    use: '.fb < text >',
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, reply, q }) => {
-try{
-
-  if(!q) return await reply("Please give me fb link !")
-    
-
-const fb_info = await fetchJson(`${apilink}/download/fbdl1?url=${q}`)
-    
-  // GET FB VIDEO
-  
-const fbcaption =` 
-
-       🔥   *FB DOWNLOADER*   🔥
-
-     
-🔮 *Title* - ${fb_info.result.title}`
-
-let sd = "SD VIDEO"
-let hd = "HD VIDEO"
-await conn.sendMessage( from, { image: { url: fb_info.result.image || '' }, caption: fbcaption }, { quoted: mek })
-
-// SEND SD QUALITY VIDEO
-await conn.sendMessage(from, { video: { url: fb_info.result.sd }, mimetype: "video/mp4", fileName: fb_info.result.title, caption: `${sd}` }, { quoted: mek });
-// SEND HD QUALITY VIDEO
-await conn.sendMessage(from, { video: { url: fb_info.result.hd }, mimetype: "video/mp4", fileName: fb_info.result.title, caption: `${hd}` }, { quoted: mek });
-
-} catch (error) {
-console.log(error)
-reply(error)
-}
-})
-
+        } catch (error) {
+            console.error(error);
+            reply(`*An Error Occurred While Fetching News At This Moment* ❗`);
+        }
+    }
+);
 
 
 
@@ -147,42 +191,568 @@ reply(error)
 
 cmd({
     pattern: "song",
-    desc: "download songs.",
+    alias: ["song2"],
+    react: "🎵",
+    desc: "download",
     category: "download",
-    react: "🎧",
     filename: __filename
 },
-async(conn, mek, m,{from, reply, q}) => {
+async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+try {
+    if (!q) return reply("*⚠️ Please provide a song title or URL*\n\n*Example:* .song Alan Walker - Faded");
+
+    const query = String(q);
+    const search = await yts(query);
+
+    if (!search.videos || !search.videos.length) {
+        return reply("❌ No results found! Please try another search.");
+    }
+
+    const deta = search.videos[0];
+    const url = deta.url;
+
+    let desc = `🎵 *Now Downloading:* ${deta.title}
+
+🎧 *Duration:* ${deta.timestamp}
+👁️ *Views:* ${deta.views}
+📅 *Uploaded:* ${deta.ago}
+👤 *Author:* ${deta.author.name}
+
+⏳ *Please wait, processing your request...*`;
+
+    await conn.sendMessage(from, { 
+        image: { url: deta.thumbnail }, 
+        caption: desc 
+    }, { quoted: mek }).catch(() => reply("❌ Error sending thumbnail"));
+
+    try {
+        const response = await axios.get(`https://api.giftedtech.my.id/api/download/ytmp3?apikey=king_haki-k7gjd8@gifted_api&url=${encodeURIComponent(url)}`);
+
+        const downloadUrl = response.data.result.download_url;
+
+        await conn.sendMessage(from, { 
+            audio: { url: downloadUrl }, 
+            mimetype: "audio/mpeg", 
+            caption: "🎵 *Successfully Downloaded!*" 
+        }, { quoted: mek });
+
+        await conn.sendMessage(from, { 
+            document: { url: downloadUrl }, 
+            mimetype: "audio/mpeg", 
+            fileName: `${deta.title}.mp3`, 
+            caption: "📎 *Document Version*\n\n✨ *Thanks for using our service!*" 
+        }, { quoted: mek });
+
+    } catch (error) {
+        reply("❌ Error downloading audio: " + error.message);
+    }
+
+} catch (e) {
+    console.log(e);
+    reply(`❌ Error: ${e.message}`);
+}
+});
+
+cmd({
+    pattern: "video",
+    alias: ["video2"],
+    react: "🎥",
+    desc: "download video",
+    category: "download",
+    filename: __filename
+},
+async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+try {
+    if (!q) return reply("*⚠️ Please provide a video title or URL*\n\n*Example:* .video Alan Walker - Faded");
+
+    const query = String(q);
+    const search = await yts(query);
+
+    if (!search.videos || !search.videos.length) {
+        return reply("❌ No results found! Please try another search.");
+    }
+
+    const deta = search.videos[0];
+    const url = deta.url;
+
+    let desc = `🎥 *Now Downloading:* ${deta.title}
+
+⏱️ *Duration:* ${deta.timestamp}
+👁️ *Views:* ${deta.views}
+📅 *Uploaded:* ${deta.ago}
+👤 *Author:* ${deta.author.name}
+
+⏳ *Please wait, processing your request...*`;
+
+    await conn.sendMessage(from, { 
+        image: { url: deta.thumbnail }, 
+        caption: desc 
+    }, { quoted: mek }).catch(() => reply("❌ Error sending thumbnail"));
+
+    try {
+        const response = await axios.get(`https://api.giftedtech.my.id/api/download/ytmp4?apikey=king_haki-k7gjd8@gifted_api&url=${encodeURIComponent(url)}`);
+
+        const downloadUrl = response.data.result.download_url;
+
+        await conn.sendMessage(from, { 
+            video: { url: downloadUrl }, 
+            mimetype: "video/mp4", 
+            caption: "🎥 *Successfully Downloaded!*" 
+        }, { quoted: mek });
+
+        await conn.sendMessage(from, { 
+            document: { url: downloadUrl }, 
+            mimetype: "video/mp4", 
+            fileName: `${deta.title}.mp4`, 
+            caption: "📎 *Document Version*\n\n✨ *Thanks for using our service!*" 
+        }, { quoted: mek });
+
+    } catch (error) {
+        reply("❌ Error downloading video: " + error.message);
+    }
+
+} catch (e) {
+    console.log(e);
+    reply(`❌ Error: ${e.message}`);
+}
+});
+
+
+cmd({
+    pattern: "happy",
+    desc: "Displays a dynamic edit msg for fun.",
+    category: "other",
+    react: "😂",
+    filename: __filename
+},
+async (conn, mek, m, { from, reply }) => {
+    try {
+        const loadingMessage = await conn.sendMessage(from, { text: '😂' });
+        const emojiMessages = [
+            "😃", "😄", "😁", "😊", "😎", "🥳",
+            "😸", "😹", "🌞", "🌈", "😃", "😄",
+            "😁", "😊", "😎", "🥳", "😸", "😹",
+            "🌞", "🌈", "😃", "😄", "😁", "😊"
+        ];
+
+        for (const line of emojiMessages) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for 1 second
+            await conn.relayMessage(
+                from,
+                {
+                    protocolMessage: {
+                        key: loadingMessage.key,
+                        type: 14,
+                        editedMessage: {
+                            conversation: line,
+                        },
+                    },
+                },
+                {}
+            );
+        }
+    } catch (e) {
+        console.log(e);
+        reply(`❌ *Error!* ${e.message}`);
+    }
+});
+
+cmd({
+    pattern: "heart",
+    desc: "Displays a dynamic edit msg for fun.",
+    category: "other",
+    react: "❤️",
+    filename: __filename
+},
+async (conn, mek, m, { from, reply }) => {
+    try {
+        const loadingMessage = await conn.sendMessage(from, { text: '🖤' });
+        const emojiMessages = [
+            "💖", "💗", "💕", "🩷", "💛", "💚",
+            "🩵", "💙", "💜", "🖤", "🩶", "🤍",
+            "🤎", "❤️‍🔥", "💞", "💓", "💘", "💝",
+            "♥️", "💟", "❤️‍🩹", "❤️"
+        ];
+
+        for (const line of emojiMessages) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for 1 second
+            await conn.relayMessage(
+                from,
+                {
+                    protocolMessage: {
+                        key: loadingMessage.key,
+                        type: 14,
+                        editedMessage: {
+                            conversation: line,
+                        },
+                    },
+                },
+                {}
+            );
+        }
+    } catch (e) {
+        console.log(e);
+        reply(`❌ *Error!* ${e.message}`);
+    }
+});
+
+cmd({
+    pattern: "angry",
+    desc: "Displays a dynamic edit msg for fun.",
+    category: "other",
+    react: "🤡",
+    filename: __filename
+},
+async (conn, mek, m, { from, reply }) => {
+    try {
+        const loadingMessage = await conn.sendMessage(from, { text: '👽' });
+        const emojiMessages = [
+            "😡", "😠", "🤬", "😤", "😾", "😡",
+            "😠", "🤬", "😤", "😾"
+        ];
+
+        for (const line of emojiMessages) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for 1 second
+            await conn.relayMessage(
+                from,
+                {
+                    protocolMessage: {
+                        key: loadingMessage.key,
+                        type: 14,
+                        editedMessage: {
+                            conversation: line,
+                        },
+                    },
+                },
+                {}
+            );
+        }
+    } catch (e) {
+        console.log(e);
+        reply(`❌ *Error!* ${e.message}`);
+    }
+});
+
+cmd({
+    pattern: "sad",
+    desc: "Displays a dynamic edit msg for fun.",
+    category: "other",
+    react: "😶",
+    filename: __filename
+},
+async (conn, mek, m, { from, reply }) => {
+    try {
+        const loadingMessage = await conn.sendMessage(from, { text: '😔' });
+        const emojiMessages = [
+            "🥺", "😟", "😕", "😖", "😫", "🙁",
+            "😩", "😥", "😓", "😪", "😢", "😔",
+            "😞", "😭", "💔", "😭", "😿"
+        ];
+
+        for (const line of emojiMessages) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for 1 second
+            await conn.relayMessage(
+                from,
+                {
+                    protocolMessage: {
+                        key: loadingMessage.key,
+                        type: 14,
+                        editedMessage: {
+                            conversation: line,
+                        },
+                    },
+                },
+                {}
+            );
+        }
+    } catch (e) {
+        console.log(e);
+        reply(`❌ *Error!* ${e.message}`);
+    }
+});
+
+cmd({
+    pattern: "shy",
+    desc: "Displays a dynamic edit msg for fun.",
+    category: "tools",
+    react: "🧐",
+    filename: __filename
+},
+async (conn, mek, m, { from, reply }) => {
+    try {
+        const loadingMessage = await conn.sendMessage(from, { text: '🧐' });
+        const emojiMessages = [
+            "😳", "😊", "😶", "🙈", "🙊",
+            "😳", "😊", "😶", "🙈", "🙊"
+        ];
+
+        for (const line of emojiMessages) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for 1 second
+            await conn.relayMessage(
+                from,
+                {
+                    protocolMessage: {
+                        key: loadingMessage.key,
+                        type: 14,
+                        editedMessage: {
+                            conversation: line,
+                        },
+                    },
+                },
+                {}
+            );
+        }
+    } catch (e) {
+        console.log(e);
+        reply(`❌ *Error!* ${e.message}`);
+    }
+});
+
+cmd({
+    pattern: "moon",
+    desc: "Displays a dynamic edit msg for fun.",
+    category: "tools",
+    react: "🌚",
+    filename: __filename
+},
+async (conn, mek, m, { from, reply }) => {
+    try {
+        const loadingMessage = await conn.sendMessage(from, { text: '🌝' });
+        const emojiMessages = [
+            "🌗", "🌘", "🌑", "🌒", "🌓", "🌔",
+            "🌕", "🌖", "🌗", "🌘", "🌑", "🌒",
+            "🌓", "🌔", "🌕", "🌖", "🌗", "🌘",
+            "🌑", "🌒", "🌓", "🌔", "🌕", "🌖",
+            "🌗", "🌘", "🌑", "🌒", "🌓", "🌔",
+            "🌕", "🌖", "🌝🌚"
+        ];
+
+        for (const line of emojiMessages) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for 1 second
+            await conn.relayMessage(
+                from,
+                {
+                    protocolMessage: {
+                        key: loadingMessage.key,
+                        type: 14,
+                        editedMessage: {
+                            conversation: line,
+                        },
+                    },
+                },
+                {}
+            );
+        }
+    } catch (e) {
+        console.log(e);
+        reply(`❌ *Error!* ${e.message}`);
+    }
+});
+
+cmd({
+    pattern: "confused",
+    desc: "Displays a dynamic edit msg for fun.",
+    category: "tools",
+    react: "🤔",
+    filename: __filename
+},
+async (conn, mek, m, { from, reply }) => {
+    try {
+        const loadingMessage = await conn.sendMessage(from, { text: '🤔' });
+        const emojiMessages = [
+            "😕", "😟", "😵", "🤔", "😖", 
+            "😲", "😦", "🤷", "🤷‍♂️", "🤷‍♀️"
+        ];
+
+        for (const line of emojiMessages) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for 1 second
+            await conn.relayMessage(
+                from,
+                {
+                    protocolMessage: {
+                        key: loadingMessage.key,
+                        type: 14,
+                        editedMessage: {
+                            conversation: line,
+                        },
+                    },
+                },
+                {}
+            );
+        }
+    } catch (e) {
+        console.log(e);
+        reply(`❌ *Error!* ${e.message}`);
+    }
+});
+
+cmd({
+    pattern: "hot",
+    desc: "Displays a dynamic edit msg for fun.",
+    category: "tools",
+    react: "💋",
+    filename: __filename
+},
+async (conn, mek, m, { from, reply }) => {
+    try {
+        const loadingMessage = await conn.sendMessage(from, { text: '💋' });
+        const emojiMessages = [
+            "🥵", "❤️", "💋", "😫", "🤤", 
+            "😋", "🥵", "🥶", "🙊", "😻", 
+            "🙈", "💋", "🫂", "🫀", "👅", 
+            "👄", "💋"
+        ];
+
+        for (const line of emojiMessages) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for 1 second
+            await conn.relayMessage(
+                from,
+                {
+                    protocolMessage: {
+                        key: loadingMessage.key,
+                        type: 14,
+                        editedMessage: {
+                            conversation: line,
+                        },
+                    },
+                },
+                {}
+            );
+        }
+    } catch (e) {
+        console.log(e);
+        reply(`❌ *Error!* ${e.message}`);
+    }
+});
+
+cmd({
+    pattern: "didula",
+    desc: "Displays a dynamic edit msg for fun.",
+    category: "tools",
+    react: "🗿",
+    filename: __filename
+},
+async (conn, mek, m, { from, reply }) => {
+    try {
+        const loadingMessage = await conn.sendMessage(from, { text: 'Didula-AI🗿' });
+
+        // Define the ASCII art messages
+        const asciiMessages = [
+            "   ⣠⣶⡾⠏⠉⠙⠳⢦⡀   ⢠⠞⠉⠙⠲⡀ \n  ⣴⠿⠏          ⢳⡀ ⡏         ⢷\n⢠⣟⣋⡀⢀⣀⣀⡀ ⣀⡀   ⣧ ⢸          ⡇\n⢸⣯⡭⠁⠸⣛⣟⠆⡴⣻⡲     ⣿  ⣸   Nikal   ⡇\n ⣟⣿⡭     ⢱        ⣿  ⢹           ⡇\n  ⠙⢿⣯⠄   __        ⡿  ⡇        ⡼\n   ⠹⣶⠆     ⡴⠃    ⠘⠤⣄⣠⠞ \n    ⢸⣷⡦⢤⡤⢤⣞⣁          \n ⢀⣤⣴⣿⣏⠁  ⠸⣏⢯⣷⣖⣦⡀      \n⢀⣾⣽⣿⣿⣿⣿⠛⢲⣶⣾⢉⡷⣿⣿⠵⣿      \n⣼⣿⠍⠉⣿⡭⠉⠙⢺⣇⣼⡏    ⣄⢸      `", "   ⣠⣶⡾⠏⠉⠙⠳⢦⡀   ⢠⠞⠉⠙⠲⡀ \n  ⣴⠿⠏          ⢳⡀ ⡏         ⢷\n⢠⣟⣋⡀⢀⣀⣀⡀ ⣀⡀   ⣧ ⢸          ⡇\n⢸⣯⡭⠁⠸⣛⣟⠆⡴⣻⡲     ⣿  ⣸   Lavde   ⡇\n ⣟⣿⡭     ⢱        ⣿  ⢹           ⡇\n  ⠙⢿⣯⠄  |__|     ⡿  ⡇        ⡼\n   ⠹⣶⠆     ⡴⠃    ⠘⠤⣄⣠⠞ \n    ⢸⣷⡦⢤⡤⢤⣞⣁          \n ⢀⣤⣴⣿⣏⠁  ⠸⣏⢯⣷⣖⣦⡀      \n⢀⣾⣽⣿⣿⣿⣿⠛⢲⣶⣾⢉⡷⣿⣿⠵⣿      \n⣼⣿⠍⠉⣿⡭⠉⠙⢺⣇⣼⡏    ⣄⢸      `", "   ⣠⣶⡾⠏⠉⠙⠳⢦⡀   ⢠⠞⠉⠙⠲⡀ \n  ⣴⠿⠏           ⢳⡀ ⡏         ⢷\n⢠⣟⣋⡀⢀⣀⣀⡀ ⣀⡀   ⣧ ⢸          ⡇\n⢸⣯⡭⠁⠸⣛⣟⠆⡴⣻⡲    ⣿  ⣸   Pehli   ⡇\n ⣟⣿⡭     ⢱       ⣿  ⢹            ⡇\n  ⠙⢿⣯⠄  (P)       ⡿  ⡇        ⡼\n   ⠹⣶⠆     ⡴⠃    ⠘⠤⣄⣠⠞ \n    ⢸⣷⡦⢤⡤⢤⣞⣁          \n ⢀⣤⣴⣿⣏⠁  ⠸⣏⢯⣷⣖⣦⡀      \n⢀⣾⣽⣿⣿⣿⣿⠛⢲⣶⣾⢉⡷⣿⣿⠵⣿      \n⣼⣿⠍⠉⣿⡭⠉⠙⢺⣇⣼⡏    ⣄⢸      `", "   ⣠⣶⡾⠏⠉⠙⠳⢦⡀   ⢠⠞⠉⠙⠲⡀ \n  ⣴⠿⠏           ⢳⡀ ⡏         ⢷\n⢠⣟⣋⡀⢀⣀⣀⡀ ⣀⡀   ⣧ ⢸          ⡇\n⢸⣯⡭⠁⠸⣛⣟⠆⡴⣻⡲    ⣿  ⣸  Fursat  ⡇\n ⣟⣿⡭     ⢱         ⣿  ⢹           ⡇\n  ⠙⢿⣯⠄   __        ⡿  ⡇        ⡼\n   ⠹⣶⠆     ⡴⠃    ⠘⠤⣄⣠⠞ \n    ⢸⣷⡦⢤⡤⢤⣞⣁          \n ⢀⣤⣴⣿⣏⠁  ⠸⣏⢯⣷⣖⣦⡀      \n⢀⣾⣽⣿⣿⣿⣿⠛⢲⣶⣾⢉⡷⣿⣿⠵⣿      \n⣼⣿⠍⠉⣿⡭⠉⠙⢺⣇⣼⡏    ⣄⢸      `", "   ⣠⣶⡾⠏⠉⠙⠳⢦⡀   ⢠⠞⠉⠙⠲⡀ \n  ⣴⠿⠏           ⢳⡀ ⡏         ⢷\n⢠⣟⣋⡀⢀⣀⣀⡀ ⣀⡀   ⣧ ⢸          ⡇\n⢸⣯⡭⠁⠸⣛⣟⠆⡴⣻⡲    ⣿  ⣸  Meeee   ⡇\n ⣟⣿⡭     ⢱         ⣿  ⢹           ⡇\n  ⠙⢿⣯⠄  |__|      ⡿  ⡇        ⡼\n   ⠹⣶⠆     ⡴⠃    ⠘⠤⣄⣠⠞ \n    ⢸⣷⡦⢤⡤⢤⣞⣁          \n ⢀⣤⣴⣿⣏⠁  ⠸⣏⢯⣷⣖⣦⡀      \n⢀⣾⣽⣿⣿⣿⣿⠛⢲⣶⣾⢉⡷⣿⣿⠵⣿      \n⣼⣿⠍⠉⣿⡭⠉⠙⢺⣇⣼⡏    ⣄⢸      `", "   ⣠⣶⡾⠏⠉⠙⠳⢦⡀   ⢠⠞⠉⠙⠲⡀ \n  ⣴⠿⠏           ⢳⡀ ⡏         ⢷\n⢠⣟⣋⡀⢀⣀⣀⡀ ⣀⡀   ⣧ ⢸           ⡇\n⢸⣯⡭⠁⠸⣛⣟⠆⡴⣻⡲   ⣿  ⣸   Nikal   ⡇\n ⣟⣿⡭     ⢱        ⣿  ⢹            ⡇\n  ⠙⢿⣯⠄  lodu     ⡿  ⡇       ⡼\n   ⠹⣶⠆       ⡴⠃    ⠘⠤⣄⣠⠞ \n    ⢸⣷⡦⢤⡤⢤⣞⣁          \n ⢀⣤⣴⣿⣏⠁  ⠸⣏⢯⣷⣖⣦⡀      \n⢀⣾⣽⣿⣿⣿⣿⠛⢲⣶⣾⢉⡷⣿⣿⠵⣿      \n⣼⣿⠍⠉⣿⡭⠉⠙⢺⣇⣼⡏    ⣄⢸ "
+        ];
+
+        // Send the initial loading message
+        for (const asciiMessage of asciiMessages) {
+            await new Promise(resolve => setTimeout(resolve, 500)); // Delay for 500ms second
+            await conn.relayMessage(
+                from,
+                {
+                    protocolMessage: {
+                        key: loadingMessage.key,
+                        type: 14,
+                        editedMessage: {
+                            conversation: asciiMessage,
+                        },
+                    },
+                },
+                {}
+            );
+        }
+    } catch (e) {
+        console.log(e);
+        reply(`❌ *Error!* ${e.message}`);
+    }
+});
+
+// > JawadTechX 
+
+
+
+
+
+
+
+cmd({
+    pattern: "owner",
+    desc: "To check ping",
+    category: "main",
+    react: "👤",
+    filename: __filename
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
 
-if(!q) return reply('Give me song name or url !')
-    
-const search = await fetchJson(`${searchlink}/search/yt?q=${q}`)
-const data = search.result.data[0];
-const url = data.url
-    
-const ytdl = await fetchJson(`${downlink}/ytmp3?url=${data.url}` + '&quality=3' )
-    
-let message = `‎‎*📍QUEEN RASHU MD SONG DOWNLOADER 🎧*
+const vcard = 'BEGIN:VCARD\n'
+            + 'VERSION:3.0\n' 
+            + 'FN:Didula Rashmika\n'
+            + 'ORG:Didula MD V2;\n'
+            + 'TEL;type=CELL;type=VOICE;waid=94741671668:+94 741 671 668\n'
+            + 'TEL;type=CELL;type=VOICE;waid=94771820962:+94 771 820 962\n'
+            + 'END:VCARD'
+
+await conn.sendMessage(from, { 
+    contacts: { 
+        displayName: 'Didula Rashmika', 
+        contacts: [{ vcard }] 
+    }
+},{quoted:mek})
+
+await conn.sendMessage(from,{image:{url: 'https://files.catbox.moe/za6ytm.jpg'},caption: `*👤 Didula MD V2 Owner Details*\n\n*👨‍💻 Owner Name:* Didula Rashmika\n*📱 Owner Number:* wa.me/94741671668\n*📱 Owner Number:* wa.me/94771820962\n\n\n*💫 Thanks For Using Didula MD V2*`},{quoted:mek})
+
+} catch (e) {
+    reply(e)
+    }
+})
 
 
- *🎵 ‎TITEL :* _${data.title}_
- *⏱ DURATION :* _${data.timestamp}_
- *🌏 UPLOADED :* _${data.ago}_
- *🧿 VIEWS :* _${data.views}_
- *🤵 AUTHOR :* _${data.author.name}_
-*📎 URL :* _${data.url}_
- 
- > *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`
-  
-await conn.sendMessage(from, { image: { url : data.thumbnail }, caption: message }, { quoted : mek })
-await conn.sendMessage(from,{audio: {url: ytdl.data.download },mimetype:"audio/mpeg"},{ quoted: mek })
-await conn.sendMessage(from,{document: {url: ytdl.data.download },mimetype:"audio/mpeg",fileName: data.title + ".mp3",caption:"> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*"},{ quoted: mek })
 
-                        
-    
-} catch(e){
-console.log(e)
-reply(e)
-}
+
+
+cmd({
+    pattern: "repo",
+    desc: "repo the bot",
+    react: "📡",
+    category: "main",
+    filename: __filename
+},
+async(conn, mek, m, {from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+    try {
+        let dec = `*DIDULA MD V2 NEW UPDATE✅*
+
+*⭕ REPO URL*
+\`\`\`https://github.com/itsme-didulabot/Didula-MD-V2\`\`\`
+
+*⭕ GET SESSION ID*
+\`\`\`https://prabath-md-pair-web-v2-slk.koyeb.app/pair\`\`\`
+
+*⭕ HEROKU DEPLOY*
+\`\`\`https://dashboard.heroku.com/new-app?template=https://github.com/itsme-didulabot/Didula-MD-V2\`\`\`
+
+SPECIAL FEATURES 👀
+
+> Chanel working
+> Heart React
+> Anti Bug Message
+> Anti Bad/Bot/Link/Call
+> AI Chat
+> Auto Status Seen React and Reply
+> Anti Once View
+> Send Status to reply
+> Anti Delete
+> Commands 100+
+
+*AUTO PLUGIN UPDATE*
+
+📥FOLLOW FOR UPDATE
+https://whatsapp.com/channel/0029VaqqF4GDTkJwKruLSK2f`;
+
+        await conn.sendMessage(from, {
+            image: {url: 'https://files.catbox.moe/za6ytm.jpg'},
+            caption: dec
+        }, {quoted: mek});
+
+    } catch(e) {
+        console.log(e);
+        reply(`${e}`);
+    }
 });
