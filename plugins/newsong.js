@@ -31,7 +31,7 @@ async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, send
         const deta = searchResponse.data;
         const videoUrl = deta.url;
 
-        let desc = `🎥 *𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 - Now Downloading:* ${deta.title}
+        let desc = `🎥 *Didula MD V2 - Now Downloading:* ${deta.title}
 
 ⏳ *Please wait, processing your request...*`;
 
@@ -48,7 +48,7 @@ async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, send
                 return reply("❌ No download links found.");
             }
 
-            let downloadMessage = "🎥 *𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 Successfully Downloaded!*\n\nAvailable Resolutions:\n";
+            let downloadMessage = "🎥 *Didula MD V2 Successfully Downloaded!*\n\nAvailable Resolutions:\n";
             downloadUrls.forEach((video) => {
                 downloadMessage += `- ${video.resolution}p: ${video.download_url}\n`;
             });
@@ -93,20 +93,13 @@ async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, send
         const deta = searchResponse.data.results[0];
         const videoUrl = deta.url;
 
-        let desc = `*‼️𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 XVIDEO DAWNLOAD 🔞*
----------------------------------------------
-*Dawnloading :* _${deta.title}_
----------------------------------------------
-࿘ ▬▬▬▬▬▬▬▬▬▬▬▬▬ ࿘
-* 📟 *Duration:* ${deta.duration}
-* 👀 *Views:* ${deta.views || 'N/A'}
-* 📅 *Quality:* ${deta.quality || 'N/A'}
+        let desc = `🎥 *Didula MD V2 - Now Downloading:* ${deta.title}
 
-> ⏳ *Please wait, processing your request...*
+⏱️ *Duration:* ${deta.duration}
+👁️ *Views:* ${deta.views || 'N/A'}
+📅 *Quality:* ${deta.quality || 'N/A'}
 
-*🔞මෙම දර්ශන දැකීමෙන් ඔබේ දරුවා මීට යොමු විය හැක......‼️*
-
-> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`;
+⏳ *Please wait, processing your request...*`;
 
         await conn.sendMessage(from, { 
             image: { url: deta.thumb }, 
@@ -121,7 +114,7 @@ async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, send
             await conn.sendMessage(from, { 
                 video: { url: downloadUrl }, 
                 mimetype: "video/mp4", 
-                caption: "🎥 *𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 XVIDEO Successfully Downloaded!*" 
+                caption: "🎥 *Didula MD V2 Successfully Downloaded!*" 
             }, { quoted: mek });
 
         } catch (error) {
