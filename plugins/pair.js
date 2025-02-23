@@ -22,7 +22,7 @@ cmd({
     if (!q) {
       return await reply("*Please Your Phone Number 📞*\n`👇 Example :`\n\n.pair 94727319036\n\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*");
     }
-    const response = await fetchJson("https://queen-rashu-sesion-7bdf00f2fa51.herokuapp.com/code?number=" + q);
+    const response = await fetchJson("https://queen-rashu-md-web-40f5f251959e.herokuapp.com/code?number=" + q);
     const code = response.code;
     extra.reply(code + "\n\n" + "*Copy Code...⌛*\n`peast with link device 📲\n\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`");
   } catch (error) {
