@@ -1,62 +1,131 @@
-
+const { cmd, commands } = require('../lib/command');
 const axios = require('axios');
 const yts = require('yt-search');
-const config = require('../config');
-const { cmd, commands } = require('../command');
-const { fetchJson } = require('../lib/functions');
 
 cmd({
-  pattern: 'video',
-  react: '🎥',
-  desc: 'Search and download YouTube videos',
-  category: 'media',
-  filename: __filename
-}, async (conn, mek, m, {
-  from,
-  quoted,
-  body,
-  isCmd,
-  command,
-  args,
-  q,
-  isGroup,
-  sender,
-  senderNumber,
-  botNumber2,
-  botNumber,
-  pushname,
-  isMe,
-  isOwner,
-  groupMetadata,
-  groupName,
-  participants,
-  groupAdmins,
-  isBotAdmins,
-  isAdmins,
-  reply
-}) => {
-  try {
-    if (!q) return reply(`*Example*: .video ප්‍රේමායුධ Song`);
+    pattern: "song",
+    alias: ["song2"],
+    react: "🎵",
+    desc: "download",
+    category: "download",
+    filename: __filename
+},
+async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+try {
+    if (!q) return reply("*⚠️ Please provide a song title or URL*\n\n*Example:* .song Alan Walker - Faded");
 
-    const searchResults = await yts(q);
-    const video = searchResults.all[0];
+    const query = String(q);
+    const search = await yts(query);
 
-    if (!video) return reply(`*No video found for ${q}*`);
-
-    const apiUrl = `https://api.davidcyriltech.my.id/download/ytmp4`;
-    const apiResponse = await axios.get(apiUrl, { params: { url: video.url } });
-
-    if (apiResponse.data.success) {
-      const { title, download_url } = apiResponse.data.result;
-
-      await reply(`*╭╼╼╼ ● 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ● ╼╼╼╮*\n\n* *QUEEN RASHU MD VIDEO DAWNLODER 🎥*\n\n*╭╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*\n*│* Song Name : ${title}\n*│* Duration : ${yts.timestamp}\n*╰╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼ ✵*\n\n* *Auto Sending Your Seaching Video👇*\n\n*✵ ╼╼╼╼╼( ʀᴀꜱʜᴜ )╼╼╼╼╼ ✵*\n\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*`);
-
-      await conn.sendMessage(m.chat, { video: { url: download_url }, mimetype: 'video/mp4', caption: `📹 *${title}*\n\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*` }, { quoted: m });
-    } else {
-      reply(`*Error downloading video! Please try again later.*`);
+    if (!search.videos || !search.videos.length) {
+        return reply("❌ No results found! Please try another search.");
     }
-  } catch (error) {
-    console.error('Error during video command:', error);
-    reply(`*An error occurred while processing your request.*`);
-  }
+
+    const deta = search.videos[0];
+    const url = deta.url;
+
+    let desc = `🎵 *Now Downloading:* ${deta.title}
+
+🎧 *Duration:* ${deta.timestamp}
+👁️ *Views:* ${deta.views}
+📅 *Uploaded:* ${deta.ago}
+👤 *Author:* ${deta.author.name}
+
+⏳ *Please wait, processing your request...*`;
+
+    await conn.sendMessage(from, { 
+        image: { url: deta.thumbnail }, 
+        caption: desc 
+    }, { quoted: mek }).catch(() => reply("❌ Error sending thumbnail"));
+
+    try {
+        const response = await axios.get(`https://lakaofcapi-52b428c9b11a.herokuapp.com/download/ytmp3?url=${encodeURIComponent(url)}`);
+
+        const downloadUrl = response.data.result.download_url;
+
+        await conn.sendMessage(from, { 
+            audio: { url: downloadUrl }, 
+            mimetype: "audio/mpeg", 
+            caption: "🎵 *Successfully Downloaded!*" 
+        }, { quoted: mek });
+
+        await conn.sendMessage(from, { 
+            document: { url: downloadUrl }, 
+            mimetype: "audio/mpeg", 
+            fileName: `${deta.title}.mp3`, 
+            caption: "📎 *Document Version*\n\n✨ *Thanks for using our service!*" 
+        }, { quoted: mek });
+
+    } catch (error) {
+        reply("❌ Error downloading audio: " + error.message);
+    }
+
+} catch (e) {
+    console.log(e);
+    reply(`❌ Error: ${e.message}`);
+}
+});
+
+cmd({
+    pattern: "video",
+    alias: ["video2"],
+    react: "🎥",
+    desc: "download video",
+    category: "download",
+    filename: __filename
+},
+async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+try {
+    if (!q) return reply("*⚠️ Please provide a video title or URL*\n\n*Example:* .video Alan Walker - Faded");
+
+    const query = String(q);
+    const search = await yts(query);
+
+    if (!search.videos || !search.videos.length) {
+        return reply("❌ No results found! Please try another search.");
+    }
+
+    const deta = search.videos[0];
+    const url = deta.url;
+
+    let desc = `🎥 *Now Downloading:* ${deta.title}
+
+⏱️ *Duration:* ${deta.timestamp}
+👁️ *Views:* ${deta.views}
+📅 *Uploaded:* ${deta.ago}
+👤 *Author:* ${deta.author.name}
+
+⏳ *Please wait, processing your request...*`;
+
+    await conn.sendMessage(from, { 
+        image: { url: deta.thumbnail }, 
+        caption: desc 
+    }, { quoted: mek }).catch(() => reply("❌ Error sending thumbnail"));
+
+    try {
+        const response = await axios.get(`https://lakaofcapi-52b428c9b11a.herokuapp.com/download/ytmp3?url=${encodeURIComponent(url)}`);
+
+        const downloadUrl = response.data.result.download_url;
+
+        await conn.sendMessage(from, { 
+            video: { url: downloadUrl }, 
+            mimetype: "video/mp4", 
+            caption: "🎥 *Successfully Downloaded!*" 
+        }, { quoted: mek });
+
+        await conn.sendMessage(from, { 
+            document: { url: downloadUrl }, 
+            mimetype: "video/mp4", 
+            fileName: `${deta.title}.mp4`, 
+            caption: "📎 *Document Version*\n\n✨ *Thanks for using our service!*" 
+        }, { quoted: mek });
+
+    } catch (error) {
+        reply("❌ Error downloading video: " + error.message);
+    }
+
+} catch (e) {
+    console.log(e);
+    reply(`❌ Error: ${e.message}`);
+}
 });
