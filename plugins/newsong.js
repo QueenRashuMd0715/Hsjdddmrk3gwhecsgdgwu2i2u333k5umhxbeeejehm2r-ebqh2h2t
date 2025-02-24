@@ -5,8 +5,8 @@ const { ytsearch, ytmp3, ytmp4 } = require('@dark-yasiya/yt-dl.js');
 // video
 
 cmd({ 
-    pattern: "mp4", 
-    alias: ["video", "song"], 
+    pattern: "video", 
+    alias: ["ytdl", "mp4"], 
     react: "🎥", 
     desc: "Download Youtube song", 
     category: "main", 
@@ -29,9 +29,9 @@ cmd({
             return reply("Failed to fetch the video. Please try again later.");
         }
         
-        let ytmsg = `╭━━━〔 *KHAN-MD* 〕━━━┈⊷
+        let ytmsg = `╭━━━〔 *𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃* 〕━━━┈⊷
 ┃▸╭───────────
-┃▸┃๏ *VIDEO DOWNLOADER*
+┃▸┃๏ *࿘ VIDEO DAWNLODER 🎥*
 ┃▸└───────────···๏
 ╰────────────────┈⊷
 ╭━━❐━⪼
@@ -40,7 +40,9 @@ cmd({
 ┇๏ *Views* -  ${yts.views}
 ┇๏ *Author* -  ${yts.author.name}
 ┇๏ *Link* -  ${yts.url}
-╰━━❑━⪼`;
+╰━━❑━⪼
+
+> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 🫟*`;
 
         // Send video details
         await conn.sendMessage(from, { image: { url: data.result.thumbnail || '' }, caption: ytmsg }, { quoted: mek });
@@ -66,8 +68,8 @@ cmd({
 
 cmd({ 
      pattern: "song", 
-     alias: ["ytdl3", "play"], 
-     react: "🎶", 
+     alias: ["ytdl3", "play","audio","mp3"], 
+     react: "🎧", 
      desc: "Download Youtube song",
      category: "main", 
      use: '.song < Yt url or Name >', 
@@ -89,9 +91,9 @@ const yt = await ytsearch(q);
         return reply("Failed to fetch the audio. Please try again later.");
     }
     
-    let ytmsg = `╭━━━〔 *KHAN-MD* 〕━━━┈⊷
+    let ytmsg = `╭━━━〔 *𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃* 〕━━━┈⊷
 ┃▸╭───────────
-┃▸┃๏ *MUSIC DOWNLOADER*
+┃▸┃๏ *࿘ AUDIO DOWNLOADER 🎧*
 ┃▸└───────────···๏
 ╰────────────────┈⊷
 ╭━━❐━⪼
@@ -101,7 +103,8 @@ const yt = await ytsearch(q);
 ┇๏ *Author* -  ${yts.author.name} 
 ┇๏ *Link* -  ${yts.url}
 ╰━━❑━⪼
-> *© Pᴏᴡᴇʀᴇᴅ Bʏ KʜᴀɴX-Aɪ ♡*`;
+
+> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 🫟*`;
 
 
 
