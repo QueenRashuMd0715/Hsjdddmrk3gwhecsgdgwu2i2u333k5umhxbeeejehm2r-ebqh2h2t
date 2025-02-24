@@ -3,7 +3,7 @@ const os = require("os");
 const { runtime } = require('../lib/functions');
 
 cmd({
-    pattern: "alive2025",
+    pattern: "alive202fjfj5",
     alias: ["online", "bot", "info"],
     desc: "Check The Queen Rashu Md Bot Online Test",
     category: "main",
