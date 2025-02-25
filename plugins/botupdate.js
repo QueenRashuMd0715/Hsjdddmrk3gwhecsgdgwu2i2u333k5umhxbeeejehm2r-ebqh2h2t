@@ -1,69 +1,31 @@
-const { cmd } = require('../command');
-const { exec } = require('child_process');
-const config = require('../config');
+const { cmd } = require('../command'); // Ensure the path is correct
+const g_i_s = require('g-i-s'); // Import g-i-s for image search
 
-
-cmd(
-  {
-    pattern: "botupdate",
-    desc: "Update the bot",
-    category: "owner",
-    react: "🔄",
-    filename: __filename,
-  },
-  async (
-    conn,
-    mek,
-    m,
-    {
-      from,
-      quoted,
-      body,
-      isCmd,
-      command,
-      args,
-      q,
-      isGroup,
-      sender,
-      senderNumber,
-      botNumber2,
-      botNumber,
-      pushname,
-      isMe,
-      isOwner,
-      groupMetadata,
-      groupName,
-      participants,
-      groupAdmins,
-      isBotAdmins,
-      isAdmins,
-      reply,
-    }
-  ) => {
+cmd({
+    pattern: "img",
+    alias: ["googleimg"],
+    react: "🔍",
+    desc: "Search for images on Google",
+    category: "search",
+    use: '.imgsearch <query>',
+    filename: __filename
+},
+async(conn, mek, m, { from, reply, q }) => {
     try {
-      if (!isOwner) {
-    return reply("❌ You Are Not The Owner !");
-  }
-      const { exec } = require("child_process");
-      reply("*𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 Bot New Update*");
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Sleep function
-      exec("pm2 restart all", (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error: ${error.message}`);
-          reply(`Error: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.error(`Stderr: ${stderr}`);
-          reply(`Stderr: ${stderr}`);
-          return;
-        }
-        console.log(`Stdout: ${stdout}`);
-        reply("𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 Bot Update successfully. ✅\n\n> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ❀*");
-      });
-    } catch (e) {
-      console.error(e);
-      reply(`An error occurred: ${e.message}`);
+        if (!q) return await reply("Please provide a search query!");
+
+        g_i_s(q, (error, result) => {
+            if (error || !result.length) return reply("No images found!");
+
+            // Send the first 5 images
+            const imageUrls = result.slice(0, 5).map(img => img.url);
+            imageUrls.forEach(async (url) => {
+                await conn.sendMessage(from, { image: { url } }, { quoted: mek });
+            });
+        });
+
+    } catch (error) {
+        console.error(error);
+        reply('An error occurred while processing your request. Please try again later.');
     }
-  }
-);
+});
