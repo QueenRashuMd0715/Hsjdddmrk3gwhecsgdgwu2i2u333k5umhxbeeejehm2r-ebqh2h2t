@@ -1189,8 +1189,8 @@ cmd(img2UrlCommand, async (context, args, utils, { reply, quoted }) => {
 
 cmd(
   {
-    pattern: 'img',
-    alias: ['image', 'pinterest', 'pinimg'],
+    pattern: 'img00000000',
+    alias: ['image0000', 'pinterest0000', 'pinimg0000'],
     react: '\uD83D\uDDBC️',
     desc: 'Search and download images from Pinterest using keywords.',
     category: 'image',
