@@ -1,31 +1,43 @@
-const { cmd } = require('../command'); // Ensure the path is correct
-const g_i_s = require('g-i-s'); // Import g-i-s for image search
+const { cmd } = require('../command');
+const axios = require('axios');
 
 cmd({
-    pattern: "img",
-    alias: ["googleimg"],
-    react: "🔍",
-    desc: "Search for images on Google",
-    category: "search",
-    use: '.imgsearch <query>',
+    pattern: "tiktokr",
+    alias: ["ttdl", "tt", "tiktokdl"],
+    desc: "Download TikTok video without watermark",
+    category: "downloader",
+    react: "🎵",
     filename: __filename
 },
-async(conn, mek, m, { from, reply, q }) => {
+async (conn, mek, m, { from, args, q, reply }) => {
     try {
-        if (!q) return await reply("Please provide a search query!");
-
-        g_i_s(q, (error, result) => {
-            if (error || !result.length) return reply("No images found!");
-
-            // Send the first 5 images
-            const imageUrls = result.slice(0, 5).map(img => img.url);
-            imageUrls.forEach(async (url) => {
-                await conn.sendMessage(from, { image: { url } }, { quoted: mek });
-            });
-        });
-
-    } catch (error) {
-        console.error(error);
-        reply('An error occurred while processing your request. Please try again later.');
+        if (!q) return reply("Please provide a TikTok video link.");
+        if (!q.includes("tiktok.com")) return reply("Invalid TikTok link.");
+        
+        reply("Downloading video, please wait...");
+        
+        const apiUrl = `https://delirius-apiofc.vercel.app/download/tiktok?url=${q}`;
+        const { data } = await axios.get(apiUrl);
+        
+        if (!data.status || !data.data) return reply("Failed to fetch TikTok video.");
+        
+        const { title, like, comment, share, author, meta } = data.data;
+        const videoUrl = meta.media.find(v => v.type === "video").org;
+        
+        const caption = `🎵 *TikTok Video* 🎵\n\n` +
+                        `👤 *User:* ${author.nickname} (@${author.username})\n` +
+                        `📖 *Title:* ${title}\n` +
+                        `👍 *Likes:* ${like}\n💬 *Comments:* ${comment}\n🔁 *Shares:* ${share}`;
+        
+        await conn.sendMessage(from, {
+            video: { url: videoUrl },
+            caption: caption,
+            contextInfo: { mentionedJid: [m.sender] }
+        }, { quoted: mek });
+        
+    } catch (e) {
+        console.error("Error in TikTok downloader command:", e);
+        reply(`An error occurred: ${e.message}`);
     }
 });
+          
