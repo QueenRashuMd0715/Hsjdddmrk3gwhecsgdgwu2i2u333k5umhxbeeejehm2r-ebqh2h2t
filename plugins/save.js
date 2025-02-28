@@ -1,5 +1,9 @@
+const { ytsearch, ytmp3, ytmp4 } =
+const yts = require("yt-search"); require('@dark-yasiya/yt-dl.js');
+const { cmd, commands } = require('../lib/command');
 const axios = require('axios');
-const { ytsearch, ytmp3, ytmp4 } = require('@dark-yasiya/yt-dl.js');
+
+//============
 
 cmd({
     pattern: "songpp",
