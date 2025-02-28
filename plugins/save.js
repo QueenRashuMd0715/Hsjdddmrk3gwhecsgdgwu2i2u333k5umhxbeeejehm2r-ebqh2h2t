@@ -1,49 +1,59 @@
-const { cmd, commands } = require('../command');
-const os = require("os");
-const { runtime } = require('../lib/functions');
+const axios = require('axios');
+const { ytsearch, ytmp3, ytmp4 } = require('@dark-yasiya/yt-dl.js');
 
 cmd({
-    pattern: "aliveboza",
-    alias: ["online", "bot", "info"],
-    desc: "Check The Queen Rashu Md Bot Online Test",
-    category: "main",
-    react: "👋",
+    pattern: "songpp",
+    alias: ["ytdl3", "yta"],
+    react: "🎵",
+    desc: "Download Youtube song",
+    category: "download",
+    use: '.song < Yt url or Name >',
     filename: __filename
-},
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+}, async (conn, mek, m, { from, prefix, quoted, q, reply }) => {
     try {
-        // Generate system status message
-        const status = `👋 𝑯𝒚𝒆  𝑰 𝑨𝒎 𝑶𝒏𝒍𝒊𝒏𝒆 𝑵𝒐𝒘 
+        if (!q) return await reply("⚠️ Please provide a YouTube URL or song name!");
 
-*♡︎•━━ ❖ 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ❖ ━━•♡︎*
+        const yt = await ytsearch(q);
+        if (yt.results.length < 1) return reply("❌ No results found!");
 
-> ʀᴜɴᴛɪᴍᴇ : ${runtime(process.uptime())} 
-> ʀᴀᴍ ᴜꜱᴀɢᴇ : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB
-> ʜᴏꜱᴛ ɴᴀᴍᴇ : ${os.hostname()}
-> ᴏᴡɴᴇʀ : 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃
+        let yts = yt.results[0];
+        let apiUrl = `https://manul-ofc-ytdl-paid-30a8f429a0a6.herokuapp.com/download/audio?url=${encodeURIComponent(yts.url)}`;
 
+        let response = await fetch(apiUrl);
+        let data = await response.json();
 
-*© 𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 ✾*
-`;
+        if (!data.status || !data.downloadUrl) {
+            return reply("❌ Failed to fetch download URL");
+        }
 
-        // Send the status message with an image
-        await conn.sendMessage(from, { 
-            image: { url: `https://i.ibb.co/g98HkMY/8188.jpg` },  // Image URL
-            caption: status,
-            contextInfo: {
-                mentionedJid: [m.sender],
-                forwardingScore: 1,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363368882758119@newsletter',
-                    newsletterName: 'ꪶ𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃ꫂ',
-                    serverMessageId: 143
-                }
-            }
+        let downloadUrl = data.downloadUrl;
+
+        let ytmsg = `╭━━━〔 *🌟 DIDULA MD V2 🌟* 〕━━━┈⊷
+┃▸╭─────────────────
+┃▸┃ 🎵 *MUSIC DOWNLOADER*
+┃▸└─────────────────···
+╰──────────────────────┈⊷
+╭━━❐━⪼
+┇🎧 *Title:* ${yts.title}
+┇⏱️ *Duration:* ${yts.timestamp}
+┇👀 *Views:* ${yts.views}
+┇👤 *Author:* ${yts.author.name}
+┇🔗 *Link:* ${yts.url}
+╰━━❑━⪼
+
+*💫 High Quality Audio By Didula MD V2*`;
+
+        await conn.sendMessage(from, { image: { url: yts.thumbnail }, caption: ytmsg }, { quoted: mek });
+        await conn.sendMessage(from, { audio: { url: downloadUrl }, mimetype: "audio/mpeg" }, { quoted: mek });
+        await conn.sendMessage(from, {
+            document: { url: downloadUrl },
+            mimetype: "audio/mpeg",
+            fileName: `${yts.title}.mp3`,
+            caption: `🎵 *${yts.title}*\n\n*🌟 Created By:* Didula Rashmika\n*🤖 Bot:* Didula MD V2`
         }, { quoted: mek });
 
     } catch (e) {
-        console.error("Error in alive command:", e);
-        reply(`An error occurred: ${e.message}`);
+        console.log(e);
+        reply("❌ An error occurred. Please try again later.");
     }
 });
